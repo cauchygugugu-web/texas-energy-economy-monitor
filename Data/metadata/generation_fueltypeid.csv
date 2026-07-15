@@ -1,0 +1,46 @@
+id,name
+ALL,all fuels
+LIG,lignite coal
+SPV,solar photovoltaic
+RC,refined coal
+WAS,renewable waste products
+BIT,bituminous coal
+STH,solar thermal
+COW,all coal products
+PET,petroleum
+OTH,other
+HPS,hydro-electric pumped storage
+OB2,biomass
+REN,renewable
+TPV,estimated total solar photovoltaic
+TSN,estimated total solar
+MLG,municiapl landfill gas
+NUC,nuclear
+ORW,other renewables
+WND,wind
+WNT,onshore wind turbine
+LFG,landfill gas
+DPV,estimated small scale solar photovoltaic
+WNS,offshore wind turbine
+ANT,anthracite coal
+BIO,biomass
+SUB,subbituminous coal
+PC,petroleum coke
+WOC,waste coal
+OOG,other gases
+NGO,natural gas & other gases
+PEL,petroleum liquids
+RFO,residual fuel oil
+SUN,solar
+GEO,geothermal
+WWW,wood and wood wastes
+WOO,waste oil and other oils
+HYC,conventional hydroelectric
+AOR,all renewables
+BIS,bituminous coal and synthetic coal
+MSB,biogenic municipal solid waste
+COL,"coal, excluding waste coal"
+FOS,fossil fuels
+NG,natural gas
+DFO,distillate fuel oil
+OBW,biomass

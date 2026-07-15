@@ -1,0 +1,16 @@
+id,name,alias
+1,Electric Utility,(1) Electric Utility
+99,All Sectors,(99) All Sectors
+98,Electric Power,(98) Electric Power
+8,Residential,(8) Residential
+90,Electric Power Sector Non-CHP,(90) Electric Power Sector Non-CHP
+6,Industrial Non-CHP,(6) Industrial Non-CHP
+3,IPP CHP,(3) IPP CHP
+94,Independent Power Producers,(94) Independent Power Producers
+96,All Commercial,(96) All Commercial
+7,Industrial CHP,(7) Industrial CHP
+2,IPP Non-CHP,(2) IPP Non-CHP
+4,Commercial Non-CHP,(4) Commercial Non-CHP
+97,All Industrial,(97) All Industrial
+95,Coal Consumption,(95) Coal Consumption
+5,Commercial CHP,(5) Commercial CHP

@@ -1,0 +1,65 @@
+id,name,alias
+MN,Minnesota,(MN) Minnesota
+CT,Connecticut,(CT) Connecticut
+IN,Indiana,(IN) Indiana
+PCC,Pacific Contiguous,Region: (PCC) Pacific Contiguous
+MAT,Middle Atlantic,Region: (MAT) Middle Atlantic
+UT,Utah,(UT) Utah
+VA,Virginia,(VA) Virginia
+PCN,Pacific Noncontiguous,Region: (PCN) Pacific Noncontiguous
+KS,Kansas,(KS) Kansas
+OH,Ohio,(OH) Ohio
+NEW,New England,Region: (NEW) New England
+SC,South Carolina,(SC) South Carolina
+ND,North Dakota,(ND) North Dakota
+MO,Missouri,(MO) Missouri
+DE,Delaware,(DE) Delaware
+PA,Pennsylvania,(PA) Pennsylvania
+WV,West Virginia,(WV) West Virginia
+WY,Wyoming,(WY) Wyoming
+NY,New York,(NY) New York
+LA,Louisiana,(LA) Louisiana
+ME,Maine,(ME) Maine
+MT,Montana,(MT) Montana
+CO,Colorado,(CO) Colorado
+ENC,East North Central,Region: (ENC) East North Central
+NE,Nebraska,(NE) Nebraska
+CA,California,(CA) California
+HI,Hawaii,(HI) Hawaii
+OR,Oregon,(OR) Oregon
+GA,Georgia,(GA) Georgia
+MA,Massachusetts,(MA) Massachusetts
+SAT,South Atlantic,Region: (SAT) South Atlantic
+MI,Michigan,(MI) Michigan
+MD,Maryland,(MD) Maryland
+NC,North Carolina,(NC) North Carolina
+ID,Idaho,(ID) Idaho
+MS,Mississippi,(MS) Mississippi
+WA,Washington,(WA) Washington
+AL,Alabama,(AL) Alabama
+90,Pacific,(90) Pacific
+PR,Puerto Rico,(PR) Puerto Rico
+WI,Wisconsin,(WI) Wisconsin
+NH,New Hampshire,(NH) New Hampshire
+ESC,East South Central,Region: (ESC) East South Central
+WNC,West North Central,Region: (WNC) West North Central
+TN,Tennessee,(TN) Tennessee
+WSC,West South Central,Region: (WSC) West South Central
+AZ,Arizona,(AZ) Arizona
+MTN,Mountain,Region: (MTN) Mountain
+KY,Kentucky,(KY) Kentucky
+US,U.S. Total,Total: (US) U.S. Total
+FL,Florida,(FL) Florida
+OK,Oklahoma,(OK) Oklahoma
+AK,Alaska,(AK) Alaska
+TX,Texas,(TX) Texas
+AR,Arkansas,(AR) Arkansas
+NJ,New Jersey,(NJ) New Jersey
+IA,Iowa,(IA) Iowa
+NV,Nevada,(NV) Nevada
+IL,Illinois,(IL) Illinois
+SD,South Dakota,(SD) South Dakota
+NM,New Mexico,(NM) New Mexico
+VT,Vermont,(VT) Vermont
+RI,Rhode Island,(RI) Rhode Island
+DC,District of Columbia,(DC) District of Columbia
