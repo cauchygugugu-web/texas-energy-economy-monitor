@@ -17,10 +17,52 @@ BASE_URL = (
     "electricity/retail-sales/data/"
 )
 
+VALID_SECTORS = {
+    "RES",
+    "COM",
+    "IND",
+    "OTH",
+    "TRA",
+    "ALL",
+}
+
+
+def normalize_sectors(
+    sectors: str | list[str],
+) -> list[str]:
+    """Normalize and validate EIA sector codes."""
+
+    if isinstance(sectors, str):
+        sector_list = [sectors]
+    else:
+        sector_list = list(sectors)
+
+    sector_list = [
+        sector.strip().upper()
+        for sector in sector_list
+    ]
+
+    if not sector_list:
+        raise ValueError(
+            "At least one sector must be provided."
+        )
+
+    invalid_sectors = (
+        set(sector_list) - VALID_SECTORS
+    )
+
+    if invalid_sectors:
+        raise ValueError(
+            f"Invalid sector codes: "
+            f"{sorted(invalid_sectors)}"
+        )
+
+    # 去重，同时保留原来的排列顺序
+    return list(dict.fromkeys(sector_list))
 
 def fetch_retail_electricity_prices(
     state: str,
-    sector: str,
+    sectors: str | list[str],
     start: str,
     end: str | None = None,
 ) -> pd.DataFrame:
@@ -51,7 +93,7 @@ def fetch_retail_electricity_prices(
         )
 
     state = state.strip().upper()
-    sector = sector.strip().upper()
+    sector_list = normalize_sectors(sectors)
 
     if len(state) != 2:
         raise ValueError(
@@ -63,13 +105,17 @@ def fetch_retail_electricity_prices(
         ("frequency", "monthly"),
         ("data[]", "price"),
         ("facets[stateid][]", state),
-        ("facets[sectorid][]", sector),
         ("start", start),
         ("sort[0][column]", "period"),
         ("sort[0][direction]", "asc"),
         ("offset", "0"),
         ("length", "5000"),
     ]
+
+    for sector in sector_list:
+        params.append(
+            ("facets[sectorid][]", sector)
+        )
 
     if end is not None:
         params.append(("end", end))
@@ -93,7 +139,8 @@ def fetch_retail_electricity_prices(
     if not records:
         raise ValueError(
             f"No observations were returned for "
-            f"state={state}, sector={sector}, "
+            f"state={state}, "
+            f"sectors={sector_list}, "
             f"start={start}, end={end}."
         )
 
@@ -152,7 +199,9 @@ def fetch_retail_electricity_prices(
                 "sectorid",
             ]
         )
-        .sort_values("period")
+        .sort_values(
+            ["period", "stateid"],
+        )
         .reset_index(drop=True)
     )
 
@@ -162,39 +211,56 @@ def fetch_retail_electricity_prices(
 def validate_electricity_data(
     df: pd.DataFrame,
     state: str,
-    sector: str,
+    sectors: str | list[str],
 ) -> None:
-    """Run basic validation checks on the cleaned data."""
+    """Run basic validation checks on electricity data."""
 
-    state = state.upper()
-    sector = sector.upper()
+    state = state.strip().upper()
+    expected_sectors = set(
+        normalize_sectors(sectors)
+    )
 
     if df.empty:
-        raise ValueError("The cleaned DataFrame is empty.")
+        raise ValueError(
+            "The cleaned DataFrame is empty."
+        )
 
     if not df["stateid"].eq(state).all():
         raise ValueError(
-            f"The data contain observations outside {state}."
+            f"The data contain observations "
+            f"outside {state}."
         )
 
-    if not df["sectorid"].eq(sector).all():
+    actual_sectors = set(
+        df["sectorid"].unique()
+    )
+
+    if actual_sectors != expected_sectors:
         raise ValueError(
-            f"The data contain observations outside {sector}."
+            f"Expected sectors "
+            f"{sorted(expected_sectors)}, "
+            f"but received "
+            f"{sorted(actual_sectors)}."
         )
 
-    if df["period"].duplicated().any():
-        raise ValueError(
-            "Duplicate monthly observations were found."
-        )
+    duplicate_mask = df.duplicated(
+        subset=[
+            "period",
+            "stateid",
+            "sectorid",
+        ]
+    )
 
-    if not df["period"].is_monotonic_increasing:
+    if duplicate_mask.any():
         raise ValueError(
-            "The observations are not sorted by month."
+            "Duplicate monthly observations "
+            "were found."
         )
 
     if not df["price"].gt(0).all():
         raise ValueError(
-            "Non-positive electricity prices were found."
+            "Non-positive electricity prices "
+            "were found."
         )
 
 
