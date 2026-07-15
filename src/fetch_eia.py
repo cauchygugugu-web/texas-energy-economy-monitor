@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from typing import Iterable
 
 import pandas as pd
 import requests
@@ -26,9 +27,23 @@ VALID_SECTORS = {
     "ALL",
 }
 
+VALID_DATA_FIELDS = {
+    "price",
+    "sales",
+    "revenue",
+    "customers",
+}
+
+DEFAULT_DATA_FIELDS = [
+    "price",
+    "sales",
+    "revenue",
+    "customers",
+]
+
 
 def normalize_sectors(
-    sectors: str | list[str],
+    sectors: str | Iterable[str],
 ) -> list[str]:
     """Normalize and validate EIA sector codes."""
 
@@ -57,127 +72,244 @@ def normalize_sectors(
             f"{sorted(invalid_sectors)}"
         )
 
-    # 去重，同时保留原来的排列顺序
+    # 去重，同时保留输入顺序
     return list(dict.fromkeys(sector_list))
 
-def fetch_retail_electricity_prices(
+
+def normalize_data_fields(
+    data_fields: str | Iterable[str],
+) -> list[str]:
+    """Normalize and validate requested EIA data fields."""
+
+    if isinstance(data_fields, str):
+        field_list = [data_fields]
+    else:
+        field_list = list(data_fields)
+
+    field_list = [
+        field.strip().lower()
+        for field in field_list
+    ]
+
+    if not field_list:
+        raise ValueError(
+            "At least one data field must be provided."
+        )
+
+    invalid_fields = (
+        set(field_list) - VALID_DATA_FIELDS
+    )
+
+    if invalid_fields:
+        raise ValueError(
+            f"Invalid data fields: "
+            f"{sorted(invalid_fields)}"
+        )
+
+    return list(dict.fromkeys(field_list))
+
+
+def fetch_retail_electricity_data(
     state: str,
-    sectors: str | list[str],
+    sectors: str | Iterable[str],
     start: str,
     end: str | None = None,
+    data_fields: str | Iterable[str] = (
+        DEFAULT_DATA_FIELDS
+    ),
+    page_size: int = 5000,
 ) -> pd.DataFrame:
     """
-    Fetch monthly retail electricity prices from the EIA API.
+    Fetch monthly retail electricity data from EIA.
 
     Parameters
     ----------
     state:
-        Two-letter U.S. state code, such as "TX".
-    sector:
-        EIA electricity sector code, such as "RES".
+        Two-letter state code, such as "TX".
+
+    sectors:
+        One sector code or several sector codes.
+
     start:
         Start month in YYYY-MM format.
+
     end:
         Optional end month in YYYY-MM format.
+
+    data_fields:
+        EIA variables to retrieve. Supported values are
+        price, sales, revenue, and customers.
+
+    page_size:
+        Number of rows requested on each API page.
 
     Returns
     -------
     pd.DataFrame
-        Clean monthly electricity price data.
+        Clean monthly retail electricity data.
     """
 
     if not API_KEY:
         raise RuntimeError(
             "EIA_API_KEY was not found. "
-            "Please add it to the project's .env file."
+            "Add it to the project's .env file."
         )
 
     state = state.strip().upper()
     sector_list = normalize_sectors(sectors)
+    field_list = normalize_data_fields(data_fields)
 
     if len(state) != 2:
         raise ValueError(
-            "State must be a two-letter code, such as 'TX'."
+            "State must be a two-letter code, "
+            "such as 'TX'."
         )
 
-    params = [
-        ("api_key", API_KEY),
-        ("frequency", "monthly"),
-        ("data[]", "price"),
-        ("facets[stateid][]", state),
-        ("start", start),
-        ("sort[0][column]", "period"),
-        ("sort[0][direction]", "asc"),
-        ("offset", "0"),
-        ("length", "5000"),
-    ]
-
-    for sector in sector_list:
-        params.append(
-            ("facets[sectorid][]", sector)
-        )
-
-    if end is not None:
-        params.append(("end", end))
-
-    response = requests.get(
-        BASE_URL,
-        params=params,
-        timeout=30,
-    )
-    response.raise_for_status()
-
-    payload = response.json()
-
-    if "response" not in payload:
+    if not 1 <= page_size <= 5000:
         raise ValueError(
-            f"Unexpected EIA response structure: {payload}"
+            "page_size must be between 1 and 5000."
         )
 
-    records = payload["response"].get("data", [])
+    all_records: list[dict] = []
+    offset = 0
+    total_rows: int | None = None
 
-    if not records:
+    with requests.Session() as session:
+        while True:
+            params: list[tuple[str, str]] = [
+                ("api_key", API_KEY),
+                ("frequency", "monthly"),
+                ("facets[stateid][]", state),
+                ("start", start),
+                ("sort[0][column]", "period"),
+                ("sort[0][direction]", "asc"),
+                ("sort[1][column]", "sectorid"),
+                ("sort[1][direction]", "asc"),
+                ("offset", str(offset)),
+                ("length", str(page_size)),
+            ]
+
+            for field in field_list:
+                params.append(
+                    ("data[]", field)
+                )
+
+            for sector in sector_list:
+                params.append(
+                    (
+                        "facets[sectorid][]",
+                        sector,
+                    )
+                )
+
+            if end is not None:
+                params.append(("end", end))
+
+            try:
+                response = session.get(
+                    BASE_URL,
+                    params=params,
+                    timeout=30,
+                )
+
+                response.raise_for_status()
+
+            except requests.RequestException as error:
+                raise RuntimeError(
+                    "The EIA API request failed."
+                ) from error
+
+            payload = response.json()
+
+            response_data = payload.get("response")
+
+            if response_data is None:
+                raise ValueError(
+                    "Unexpected EIA API response: "
+                    f"{payload}"
+                )
+
+            page_records = response_data.get(
+                "data",
+                [],
+            )
+
+            if total_rows is None:
+                total_value = response_data.get(
+                    "total",
+                    0,
+                )
+                total_rows = int(total_value)
+
+            if not page_records:
+                break
+
+            all_records.extend(page_records)
+
+            offset += len(page_records)
+
+            print(
+                f"Retrieved {offset} of "
+                f"{total_rows} rows."
+            )
+
+            if offset >= total_rows:
+                break
+
+    if not all_records:
         raise ValueError(
-            f"No observations were returned for "
+            "No observations were returned for "
             f"state={state}, "
             f"sectors={sector_list}, "
             f"start={start}, end={end}."
         )
 
-    df = pd.DataFrame(records)
+    df = pd.DataFrame(all_records)
 
     required_columns = {
         "period",
         "stateid",
         "sectorid",
-        "price",
+        *field_list,
     }
 
-    missing_columns = required_columns.difference(df.columns)
+    missing_columns = (
+        required_columns - set(df.columns)
+    )
 
     if missing_columns:
         raise ValueError(
-            f"Required columns are missing: "
+            "Required columns are missing: "
             f"{sorted(missing_columns)}"
         )
 
-    selected_columns = [
+    identifier_columns = [
         "period",
         "stateid",
         "stateDescription",
         "sectorid",
         "sectorName",
-        "price",
-        "price-units",
     ]
 
-    available_columns = [
+    value_columns: list[str] = []
+
+    for field in field_list:
+        value_columns.append(field)
+
+        units_column = f"{field}-units"
+
+        if units_column in df.columns:
+            value_columns.append(units_column)
+
+    selected_columns = [
         column
-        for column in selected_columns
+        for column in (
+            identifier_columns + value_columns
+        )
         if column in df.columns
     ]
 
-    df = df[available_columns].copy()
+    df = df[selected_columns].copy()
 
     df["period"] = pd.to_datetime(
         df["period"],
@@ -185,13 +317,14 @@ def fetch_retail_electricity_prices(
         errors="coerce",
     )
 
-    df["price"] = pd.to_numeric(
-        df["price"],
-        errors="coerce",
-    )
+    for field in field_list:
+        df[field] = pd.to_numeric(
+            df[field],
+            errors="coerce",
+        )
 
     df = (
-        df.dropna(subset=["period", "price"])
+        df.dropna(subset=["period"])
         .drop_duplicates(
             subset=[
                 "period",
@@ -200,7 +333,10 @@ def fetch_retail_electricity_prices(
             ]
         )
         .sort_values(
-            ["period", "stateid"],
+            [
+                "period",
+                "sectorid",
+            ]
         )
         .reset_index(drop=True)
     )
@@ -208,14 +344,38 @@ def fetch_retail_electricity_prices(
     return df
 
 
+def fetch_retail_electricity_prices(
+    state: str,
+    sectors: str | Iterable[str],
+    start: str,
+    end: str | None = None,
+) -> pd.DataFrame:
+    """
+    Fetch only monthly retail electricity prices.
+
+    This wrapper is retained so that earlier scripts
+    and notebooks continue to work.
+    """
+
+    return fetch_retail_electricity_data(
+        state=state,
+        sectors=sectors,
+        start=start,
+        end=end,
+        data_fields=["price"],
+    )
+
+
 def validate_electricity_data(
     df: pd.DataFrame,
     state: str,
-    sectors: str | list[str],
+    sectors: str | Iterable[str],
+    required_fields: Iterable[str] | None = None,
 ) -> None:
-    """Run basic validation checks on electricity data."""
+    """Run structural validation checks."""
 
     state = state.strip().upper()
+
     expected_sectors = set(
         normalize_sectors(sectors)
     )
@@ -232,7 +392,7 @@ def validate_electricity_data(
         )
 
     actual_sectors = set(
-        df["sectorid"].unique()
+        df["sectorid"].dropna().unique()
     )
 
     if actual_sectors != expected_sectors:
@@ -253,61 +413,55 @@ def validate_electricity_data(
 
     if duplicate_mask.any():
         raise ValueError(
-            "Duplicate monthly observations "
-            "were found."
+            "Duplicate month-state-sector "
+            "observations were found."
         )
 
-    if not df["price"].gt(0).all():
+    if not df["period"].is_monotonic_increasing:
         raise ValueError(
-            "Non-positive electricity prices "
-            "were found."
+            "The observations are not sorted "
+            "chronologically."
         )
+
+    if required_fields is not None:
+        missing_fields = (
+            set(required_fields) - set(df.columns)
+        )
+
+        if missing_fields:
+            raise ValueError(
+                "Required fields are missing: "
+                f"{sorted(missing_fields)}"
+            )
 
 
 def main() -> None:
     state = "TX"
-    sector = "RES"
 
-    df = fetch_retail_electricity_prices(
+    sectors = [
+        "RES",
+        "COM",
+        "IND",
+    ]
+
+    df = fetch_retail_electricity_data(
         state=state,
-        sector=sector,
+        sectors=sectors,
         start="2015-01",
     )
 
     validate_electricity_data(
         df=df,
         state=state,
-        sector=sector,
+        sectors=sectors,
+        required_fields=DEFAULT_DATA_FIELDS,
     )
 
-    output_path = (
-        PROJECT_ROOT
-        / "data"
-        / "raw"
-        / "eia_tx_residential_price.csv"
-    )
-
-    output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    df.to_csv(
-        output_path,
-        index=False,
-    )
-
-    print(df.head())
+    print(df.head(9))
     print()
-    print(df.tail())
+    print(df.tail(9))
     print()
     print(f"Number of observations: {len(df)}")
-    print(
-        f"Date range: "
-        f"{df['period'].min():%Y-%m} to "
-        f"{df['period'].max():%Y-%m}"
-    )
-    print(f"Saved to: {output_path}")
 
 
 if __name__ == "__main__":
