@@ -1,0 +1,40 @@
+fueltypeid,fuel_description,analysis_group,is_reported_total,include_in_mix,notes
+ALL,all fuels,Total,True,False,Reported all-fuels total; excluded from component sum.
+ANT,anthracite coal,Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+AOR,all renewables,Renewables Excluding Hydro Total,True,False,"Aggregate non-hydro renewable total; equals wind, utility-scale solar, and biomass."
+BIO,biomass,Biomass,False,True,Selected non-overlapping component for generation mix.
+BIS,bituminous coal and synthetic coal,Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+BIT,bituminous coal,Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+COL,"coal, excluding waste coal",Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+COW,all coal products,Coal,False,True,Selected non-overlapping component for generation mix.
+DFO,distillate fuel oil,Petroleum,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+DPV,estimated small scale solar photovoltaic,Solar,False,False,Estimated small-scale solar; excluded because it is not included in the reported ALL total.
+FOS,fossil fuels,Fossil Fuels Total,True,False,"Aggregate fossil-fuel total; equals coal, natural gas and other gases, and petroleum."
+HYC,conventional hydroelectric,Hydroelectric,False,True,Selected non-overlapping component for generation mix.
+LFG,landfill gas,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+LIG,lignite coal,Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+MLG,municiapl landfill gas,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+NG,natural gas,Natural Gas,False,True,Selected non-overlapping component for generation mix.
+NGO,natural gas & other gases,Natural Gas and Other Gases,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+NUC,nuclear,Nuclear,False,True,Selected non-overlapping component for generation mix.
+OB2,biomass,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+OBW,biomass,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+OOG,other gases,Other Gases,False,True,Selected non-overlapping component for generation mix.
+ORW,other renewables,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+OTH,other,Other,False,True,Selected residual other category; negative values are preserved.
+PC,petroleum coke,Petroleum,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+PEL,petroleum liquids,Petroleum,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+PET,petroleum,Petroleum,False,True,Selected aggregate petroleum category. Some recent months may be missing.
+RC,refined coal,Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+REN,renewable,Renewables Total,True,False,Aggregate renewable total; includes hydroelectric generation.
+RFO,residual fuel oil,Petroleum,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+SPV,solar photovoltaic,Solar,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+SUB,subbituminous coal,Coal,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+SUN,solar,Solar,False,True,Selected non-overlapping component for generation mix.
+TPV,estimated total solar photovoltaic,Solar Total,True,False,Total photovoltaic generation including small-scale solar; excluded to avoid overlap.
+TSN,estimated total solar,Solar Total,True,False,Total solar generation including small-scale solar; excluded to avoid overlap.
+WAS,renewable waste products,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+WND,wind,Wind,False,True,Selected non-overlapping component for generation mix.
+WNT,onshore wind turbine,Wind,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+WOO,waste oil and other oils,Petroleum,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
+WWW,wood and wood wastes,Biomass,False,False,Subcategory or duplicate aggregate; excluded to avoid double counting.
