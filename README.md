@@ -64,6 +64,15 @@ PET = FOS - COW - NG - OOG
 - Reconciled selected fuel components with the EIA reported all-fuels total.
 - Added an automated reconciliation tolerance check.
 
+### Integrated monthly energy dataset
+
+- Converted the retail-electricity data from sector-level long format to monthly wide format.
+- Aligned retail-electricity and generation data by month.
+- Merged the two datasets using one-to-one monthly matching.
+- Created a merge-coverage report for unmatched months.
+- Preserved only months available in both datasets in the main integrated dataset.
+- Built the first integrated Texas monthly energy dataset.
+
 ## Data source
 
 The current datasets are retrieved from the U.S. Energy Information Administration API.
@@ -101,7 +110,8 @@ texas-energy-economy-monitor/
 │   ├── finalize_fuel_mapping.py
 │   ├── generation_transform.py
 │   ├── inspect_generation_metadata.py
-│   └── validate_generation_totals.py
+│   ├── validate_generation_totals.py
+│   ├── build_integrated_energy_dataset.py
 ├── .env.example
 ├── .gitignore
 ├── README.md
@@ -182,6 +192,20 @@ python src/build_generation_dataset.py
 python src/validate_generation_totals.py
 ```
 
+### Build the integrated monthly energy dataset
+
+First generate the retail and generation datasets:
+
+```bash
+python src/build_retail_dataset.py
+python src/build_generation_dataset.py
+```
+
+Then merge them
+```bash
+python src/build_integrated_energy_dataset.py
+```
+
 ## Generated outputs
 
 Generated CSV files are stored under:
@@ -202,9 +226,18 @@ eia_tx_generation_clean_wide.csv
 eia_tx_generation_group_coverage.csv
 eia_tx_generation_derived_petroleum.csv
 eia_tx_generation_reconciliation.csv
+eia_tx_integrated_energy_monthly.csv
+eia_tx_integrated_merge_report.csv
 ```
 
 Most generated data files are excluded from version control because they can be reproduced from the source code.
+
+The integrated dataset contains one row per month and combines:
+
+- residential, commercial, and industrial retail-electricity measures;
+- monthly electricity generation by standardized fuel group.
+
+The merge report records whether each month is available in the retail dataset, the generation dataset, or both.
 
 ## Data-validation principles
 
@@ -219,6 +252,10 @@ The project currently follows these rules:
 - valid negative generation values are preserved;
 - derived observations are stored separately for auditing;
 - selected fuel components must reproduce the reported total within a defined numerical tolerance.
+- retail and generation datasets are merged using one-to-one monthly validation;
+- unmatched months are documented rather than silently discarded;
+- missing observations are not automatically converted to zero;
+- the integrated dataset retains only months available from both source datasets.
 
 ## Current limitations
 
@@ -231,18 +268,20 @@ The project currently follows these rules:
 
 ## Next milestone
 
-The next stage is to align and merge:
+The next stage is to construct analysis-ready energy indicators from the integrated monthly dataset.
 
-- monthly retail-electricity data;
-- monthly generation-by-fuel data.
+Planned indicators include:
 
-This will produce the first integrated Texas monthly energy dataset, which can later support:
+- total generation;
+- generation by broad energy category;
+- renewable generation and renewable share;
+- fossil-fuel generation and fossil-fuel share;
+- fuel-specific generation shares;
+- electricity sales per customer;
+- retail revenue per customer;
+- generation and retail-data consistency checks.
 
-- generation-mix indicators;
-- renewable-energy shares;
-- electricity-demand measures;
-- sector-level price comparisons;
-- descriptive energy-economics analysis.
+The project will continue to prioritize transparent variable definitions, reproducibility, and data validation before beginning economic analysis.
 
 ## Research direction
 
