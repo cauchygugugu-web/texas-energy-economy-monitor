@@ -90,6 +90,14 @@ PET = FOS - COW - NG - OOG
 - Generated descriptive statistics for the main monthly energy indicators.
 - Created a variable-coverage and missing-value report.
 
+### Descriptive visualizations
+
+- Visualized retail electricity prices by customer sector.
+- Visualized monthly generation by major energy source.
+- Compared renewable, fossil-fuel, and nuclear generation shares.
+- Visualized fuel-specific generation shares.
+- Examined residential electricity sales per customer.
+
 ## Data source
 
 The current datasets are retrieved from the U.S. Energy Information Administration API.
@@ -116,7 +124,8 @@ texas-energy-economy-monitor/
 │   └── variable_dictionary.csv
 ├── notebooks/
 │   ├── 01_eia_exploration.ipynb
-│   └── 02_sector_comparison.ipynb
+│   ├── 02_sector_comparison.ipynb
+│   └── 03_descriptive_visualizations.ipynb
 ├── reports/
 │   ├── figures/
 │   └── tables/
@@ -326,17 +335,9 @@ The project currently follows these rules:
 
 ## Next milestone
 
-The next stage is to produce the first descriptive
-visualizations of Texas electricity prices, generation,
-and generation shares.
-
-Planned outputs include:
-
-- retail electricity price trends by sector;
-- monthly generation by major fuel group;
-- renewable and fossil-fuel generation shares;
-- wind, solar, natural-gas, and coal generation trends;
-- seasonal patterns in electricity sales per customer.
+The next stage is to examine seasonality and long-run trends
+in the monthly energy indicators and prepare the dataset for
+integration with public macroeconomic data.
 
 ## Research direction
 
