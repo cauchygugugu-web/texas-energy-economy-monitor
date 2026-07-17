@@ -1,0 +1,55 @@
+﻿variable,category,unit,source,definition,construction,notes
+Biomass,generation,thousand MWh,EIA Electric Power Operational Data,Biomass electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Coal,generation,thousand MWh,EIA Electric Power Operational Data,Coal electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Hydroelectric,generation,thousand MWh,EIA Electric Power Operational Data,Conventional hydroelectric generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Natural Gas,generation,thousand MWh,EIA Electric Power Operational Data,Natural-gas electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Nuclear,generation,thousand MWh,EIA Electric Power Operational Data,Nuclear electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Other,generation,thousand MWh,EIA Electric Power Operational Data,Generation classified by EIA as Other,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Other Gases,generation,thousand MWh,EIA Electric Power Operational Data,Electricity generation from other gases,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Petroleum,generation,thousand MWh,EIA Electric Power Operational Data,Petroleum electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Solar,generation,thousand MWh,EIA Electric Power Operational Data,Utility-scale solar electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+Wind,generation,thousand MWh,EIA Electric Power Operational Data,Wind electricity generation,Original or aggregated EIA fuel series selected through fuel_mapping.csv,Selected categories are mutually non-overlapping
+fossil_generation,generation,thousand MWh,Derived from EIA,Electricity generation from fossil fuels,Coal + Natural Gas + Other Gases + Petroleum,
+non_fossil_generation,generation,thousand MWh,Derived from EIA,Renewable and nuclear electricity generation,renewable_generation + Nuclear,
+renewable_generation,generation,thousand MWh,Derived from EIA,Electricity generation from renewable sources,Wind + Solar + Hydroelectric + Biomass,
+total_generation,generation,thousand MWh,Derived from EIA,Total electricity generation from selected non-overlapping fuel categories,"Sum of Coal, Natural Gas, Other Gases, Petroleum, Nuclear, Hydroelectric, Wind, Solar, Biomass, and Other",Validated against the EIA reported all-fuels total
+biomass_share,generation share,proportion,Derived,Share of total generation from Biomass,Biomass / total_generation,Multiply by 100 for percentage units
+coal_share,generation share,proportion,Derived,Share of total generation from Coal,Coal / total_generation,Multiply by 100 for percentage units
+fossil_share,generation share,proportion,Derived,Share of generation from fossil fuels,fossil_generation / total_generation,Multiply by 100 for percentage units
+hydroelectric_share,generation share,proportion,Derived,Share of total generation from Hydroelectric,Hydroelectric / total_generation,Multiply by 100 for percentage units
+natural_gas_share,generation share,proportion,Derived,Share of total generation from Natural Gas,Natural Gas / total_generation,Multiply by 100 for percentage units
+nuclear_share,generation share,proportion,Derived,Share of generation from nuclear energy,Nuclear / total_generation,
+other_gases_share,generation share,proportion,Derived,Share of total generation from Other Gases,Other Gases / total_generation,Multiply by 100 for percentage units
+other_share,generation share,proportion,Derived,Share of generation classified as Other,Other / total_generation,
+petroleum_share,generation share,proportion,Derived,Share of total generation from Petroleum,Petroleum / total_generation,Multiply by 100 for percentage units
+renewable_share,generation share,proportion,Derived,Share of generation from renewable sources,renewable_generation / total_generation,Multiply by 100 for percentage units
+solar_share,generation share,proportion,Derived,Share of total generation from Solar,Solar / total_generation,Multiply by 100 for percentage units
+wind_share,generation share,proportion,Derived,Share of total generation from Wind,Wind / total_generation,Multiply by 100 for percentage units
+period,identifier,month,EIA,Observation month,Original monthly date,Stored as YYYY-MM-DD
+selected_sector_customers,retail aggregate,customers,Derived,Combined customer count for the three selected sectors,residential_customers + commercial_customers + industrial_customers,
+selected_sector_revenue,retail aggregate,million dollars,Derived,Combined retail revenue for the three selected sectors,residential_revenue + commercial_revenue + industrial_revenue,
+selected_sector_sales,retail aggregate,million kWh,Derived,"Combined electricity sales for residential, commercial, and industrial sectors",residential_sales + commercial_sales + industrial_sales,
+commercial_customers,retail electricity,customers,EIA Retail Sales,Number of commercial customers,Original EIA variable,
+commercial_price,retail electricity,cents per kWh,EIA Retail Sales,Average commercial retail electricity price,Original EIA variable,Average retail revenue per unit of electricity sold
+commercial_revenue,retail electricity,million dollars,EIA Retail Sales,Commercial retail electricity revenue,Original EIA variable,
+commercial_sales,retail electricity,million kWh,EIA Retail Sales,Commercial electricity sales,Original EIA variable,
+industrial_customers,retail electricity,customers,EIA Retail Sales,Number of industrial customers,Original EIA variable,
+industrial_price,retail electricity,cents per kWh,EIA Retail Sales,Average industrial retail electricity price,Original EIA variable,Average retail revenue per unit of electricity sold
+industrial_revenue,retail electricity,million dollars,EIA Retail Sales,Industrial retail electricity revenue,Original EIA variable,
+industrial_sales,retail electricity,million kWh,EIA Retail Sales,Industrial electricity sales,Original EIA variable,
+residential_customers,retail electricity,customers,EIA Retail Sales,Number of residential customers,Original EIA variable,
+residential_price,retail electricity,cents per kWh,EIA Retail Sales,Average residential retail electricity price,Original EIA variable,Average retail revenue per unit of electricity sold
+residential_revenue,retail electricity,million dollars,EIA Retail Sales,Residential retail electricity revenue,Original EIA variable,
+residential_sales,retail electricity,million kWh,EIA Retail Sales,Residential electricity sales,Original EIA variable,
+commercial_revenue_per_customer_dollars,retail indicator,dollars per customer per month,Derived,Average monthly commercial revenue per customer,"commercial_revenue * 1,000,000 / commercial_customers",
+commercial_sales_per_customer_kwh,retail indicator,kWh per customer per month,Derived,Average monthly commercial electricity sales per customer,"commercial_sales * 1,000,000 / commercial_customers",
+industrial_revenue_per_customer_dollars,retail indicator,dollars per customer per month,Derived,Average monthly industrial revenue per customer,"industrial_revenue * 1,000,000 / industrial_customers",
+industrial_sales_per_customer_kwh,retail indicator,kWh per customer per month,Derived,Average monthly industrial electricity sales per customer,"industrial_sales * 1,000,000 / industrial_customers",
+residential_revenue_per_customer_dollars,retail indicator,dollars per customer per month,Derived,Average monthly residential revenue per customer,"residential_revenue * 1,000,000 / residential_customers",
+residential_sales_per_customer_kwh,retail indicator,kWh per customer per month,Derived,Average monthly residential electricity sales per customer,"residential_sales * 1,000,000 / residential_customers",
+commercial_price_difference,validation,cents per kWh,Derived,Difference between reconstructed and reported price,commercial_reconstructed_price - commercial_price,
+commercial_reconstructed_price,validation,cents per kWh,Derived,Commercial price reconstructed from revenue and sales,commercial_revenue / commercial_sales * 100,Used to validate the reported EIA price
+industrial_price_difference,validation,cents per kWh,Derived,Difference between reconstructed and reported price,industrial_reconstructed_price - industrial_price,
+industrial_reconstructed_price,validation,cents per kWh,Derived,Industrial price reconstructed from revenue and sales,industrial_revenue / industrial_sales * 100,Used to validate the reported EIA price
+residential_price_difference,validation,cents per kWh,Derived,Difference between reconstructed and reported price,residential_reconstructed_price - residential_price,
+residential_reconstructed_price,validation,cents per kWh,Derived,Residential price reconstructed from revenue and sales,residential_revenue / residential_sales * 100,Used to validate the reported EIA price

@@ -1,0 +1,14 @@
+variable,total_months,observed_months,missing_months,first_period,last_period
+residential_price,136,136,0,2015-01-01,2026-04-01
+commercial_price,136,136,0,2015-01-01,2026-04-01
+industrial_price,136,136,0,2015-01-01,2026-04-01
+total_generation,136,136,0,2015-01-01,2026-04-01
+renewable_share,136,136,0,2015-01-01,2026-04-01
+fossil_share,136,136,0,2015-01-01,2026-04-01
+natural_gas_share,136,136,0,2015-01-01,2026-04-01
+coal_share,136,136,0,2015-01-01,2026-04-01
+wind_share,136,136,0,2015-01-01,2026-04-01
+solar_share,136,136,0,2015-01-01,2026-04-01
+residential_sales_per_customer_kwh,136,136,0,2015-01-01,2026-04-01
+commercial_sales_per_customer_kwh,136,136,0,2015-01-01,2026-04-01
+industrial_sales_per_customer_kwh,136,136,0,2015-01-01,2026-04-01

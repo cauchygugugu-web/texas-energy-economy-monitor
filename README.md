@@ -83,6 +83,13 @@ PET = FOS - COW - NG - OOG
 - Reconstructed retail electricity prices from revenue and sales.
 - Created a retail-price validation report.
 
+### Data documentation and descriptive statistics
+
+- Created a formal variable dictionary.
+- Documented variable definitions, units, sources, and construction methods.
+- Generated descriptive statistics for the main monthly energy indicators.
+- Created a variable-coverage and missing-value report.
+
 ## Data source
 
 The current datasets are retrieved from the U.S. Energy Information Administration API.
@@ -105,24 +112,32 @@ texas-energy-economy-monitor/
 │   ├── metadata/
 │   ├── processed/
 │   └── raw/
+├── docs/
+│   └── variable_dictionary.csv
 ├── notebooks/
 │   ├── 01_eia_exploration.ipynb
 │   └── 02_sector_comparison.ipynb
 ├── reports/
-│   └── figures/
+│   ├── figures/
+│   └── tables/
+│       ├── energy_indicator_summary.csv
+│       └── energy_indicator_coverage.csv
 ├── src/
+│   ├── build_descriptive_summary.py
+│   ├── build_energy_indicators.py
 │   ├── build_generation_dataset.py
+│   ├── build_integrated_energy_dataset.py
 │   ├── build_price_panel.py
 │   ├── build_retail_dataset.py
+│   ├── build_variable_dictionary.py
 │   ├── create_fuel_mapping.py
 │   ├── fetch_eia.py
 │   ├── fetch_generation.py
 │   ├── finalize_fuel_mapping.py
 │   ├── generation_transform.py
 │   ├── inspect_generation_metadata.py
-│   ├── validate_generation_totals.py
-│   ├── build_integrated_energy_dataset.py
-├── .env.example
+│   └── validate_generation_totals.py
+├── .env_example
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -222,6 +237,18 @@ python src/build_integrated_energy_dataset.py
 python src/build_energy_indicators.py
 ```
 
+### Build the variable dictionary
+
+```bash
+python src/build_variable_dictionary.py
+```
+
+### Generate descriptive statistics
+
+```bash
+python src/build_descriptive_summary.py
+```
+
 ## Generated outputs
 
 Generated CSV files are stored under:
@@ -244,6 +271,22 @@ eia_tx_generation_derived_petroleum.csv
 eia_tx_generation_reconciliation.csv
 eia_tx_integrated_energy_monthly.csv
 eia_tx_integrated_merge_report.csv
+eia_tx_energy_indicators_monthly.csv
+eia_tx_retail_price_validation.csv
+```
+
+Descriptive reports are stored under:
+
+```text
+reports/tables/
+├── energy_indicator_summary.csv
+└── energy_indicator_coverage.csv
+```
+
+The variable dictionary is stored at:
+
+```text
+docs/variable_dictionary.csv
 ```
 
 Most generated data files are excluded from version control because they can be reproduced from the source code.
@@ -264,7 +307,6 @@ The project currently follows these rules:
 - numeric API fields are explicitly converted from strings;
 - duplicate month-state-sector or month-fuel observations are rejected;
 - aggregate fuel categories are not added to their own subcategories;
-- missing values are not automatically treated as zero;
 - valid negative generation values are preserved;
 - derived observations are stored separately for auditing;
 - selected fuel components must reproduce the reported total within a defined numerical tolerance.
@@ -284,9 +326,17 @@ The project currently follows these rules:
 
 ## Next milestone
 
-The next stage is to create a formal variable dictionary and
-produce the first descriptive summary tables and visualizations
-from the analysis-ready monthly dataset.
+The next stage is to produce the first descriptive
+visualizations of Texas electricity prices, generation,
+and generation shares.
+
+Planned outputs include:
+
+- retail electricity price trends by sector;
+- monthly generation by major fuel group;
+- renewable and fossil-fuel generation shares;
+- wind, solar, natural-gas, and coal generation trends;
+- seasonal patterns in electricity sales per customer.
 
 ## Research direction
 
