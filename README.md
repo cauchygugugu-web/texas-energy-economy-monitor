@@ -73,6 +73,16 @@ PET = FOS - COW - NG - OOG
 - Preserved only months available in both datasets in the main integrated dataset.
 - Built the first integrated Texas monthly energy dataset.
 
+### Analysis-ready energy indicators
+
+- Constructed total monthly electricity generation.
+- Constructed renewable and fossil-fuel generation totals.
+- Calculated renewable, fossil-fuel, nuclear, and fuel-specific generation shares.
+- Calculated sector-level electricity sales per customer.
+- Calculated sector-level retail revenue per customer.
+- Reconstructed retail electricity prices from revenue and sales.
+- Created a retail-price validation report.
+
 ## Data source
 
 The current datasets are retrieved from the U.S. Energy Information Administration API.
@@ -206,6 +216,12 @@ Then merge them
 python src/build_integrated_energy_dataset.py
 ```
 
+### Build analysis-ready energy indicators
+
+```bash
+python src/build_energy_indicators.py
+```
+
 ## Generated outputs
 
 Generated CSV files are stored under:
@@ -268,20 +284,9 @@ The project currently follows these rules:
 
 ## Next milestone
 
-The next stage is to construct analysis-ready energy indicators from the integrated monthly dataset.
-
-Planned indicators include:
-
-- total generation;
-- generation by broad energy category;
-- renewable generation and renewable share;
-- fossil-fuel generation and fossil-fuel share;
-- fuel-specific generation shares;
-- electricity sales per customer;
-- retail revenue per customer;
-- generation and retail-data consistency checks.
-
-The project will continue to prioritize transparent variable definitions, reproducibility, and data validation before beginning economic analysis.
+The next stage is to create a formal variable dictionary and
+produce the first descriptive summary tables and visualizations
+from the analysis-ready monthly dataset.
 
 ## Research direction
 
