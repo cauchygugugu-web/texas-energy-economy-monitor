@@ -124,6 +124,219 @@ def build_variable_dictionary() -> pd.DataFrame:
         },
     ]
 
+    rows.extend(
+        [
+            {
+                "variable": "tx_unemployment_rate",
+                "category": "labor market",
+                "unit": "percent",
+                "source": "FRED: TXUR",
+                "definition": (
+                    "Texas unemployment rate."
+                ),
+                "construction": (
+                    "Original monthly FRED series."
+                ),
+                "notes": (
+                    "Seasonal-adjustment information is "
+                    "recorded in fred_series_metadata.csv."
+                ),
+            },
+            {
+                "variable": "tx_total_nonfarm_employment",
+                "category": "labor market",
+                "unit": "thousands of persons",
+                "source": "FRED: TXNA",
+                "definition": (
+                    "Total nonfarm employment in Texas."
+                ),
+                "construction": (
+                    "Original monthly FRED series."
+                ),
+                "notes": (
+                    "Seasonal-adjustment information is "
+                    "recorded in fred_series_metadata.csv."
+                ),
+            },
+            {
+                "variable": "wti_crude_oil_price",
+                "category": "energy price",
+                "unit": "dollars per barrel",
+                "source": "FRED: MCOILWTICO",
+                "definition": (
+                    "Monthly West Texas Intermediate "
+                    "crude-oil price."
+                ),
+                "construction": (
+                    "Original monthly FRED series."
+                ),
+                "notes": "",
+            },
+            {
+                "variable": "henry_hub_natural_gas_price",
+                "category": "energy price",
+                "unit": "dollars per million Btu",
+                "source": "FRED: MHHNGSP",
+                "definition": (
+                    "Monthly Henry Hub natural-gas "
+                    "spot price."
+                ),
+                "construction": (
+                    "Original monthly FRED series."
+                ),
+                "notes": "",
+            },
+            {
+                "variable": "us_cpi",
+                "category": "price index",
+                "unit": "index",
+                "source": "FRED: CPIAUCSL",
+                "definition": (
+                    "U.S. Consumer Price Index for "
+                    "All Urban Consumers."
+                ),
+                "construction": (
+                    "Original monthly FRED series."
+                ),
+                "notes": (
+                    "Used to convert nominal retail "
+                    "electricity prices into January "
+                    "2025 price levels."
+                ),
+            },
+        ]
+    )
+
+    rows.extend(
+        [
+            {
+                "variable": (
+                    "tx_nonfarm_employment_yoy_pct"
+                ),
+                "category": "labor market",
+                "unit": "percent",
+                "source": "Derived from FRED: TXNA",
+                "definition": (
+                    "Year-over-year percentage change "
+                    "in Texas total nonfarm employment."
+                ),
+                "construction": (
+                    "(tx_total_nonfarm_employment_t / "
+                    "tx_total_nonfarm_employment_t_minus_12 "
+                    "- 1) * 100"
+                ),
+                "notes": (
+                    "The first 12 months are missing "
+                    "because no prior-year comparison "
+                    "is available."
+                ),
+            },
+            {
+                "variable": (
+                    "tx_unemployment_rate_yoy_pp"
+                ),
+                "category": "labor market",
+                "unit": "percentage points",
+                "source": "Derived from FRED: TXUR",
+                "definition": (
+                    "Year-over-year change in the Texas "
+                    "unemployment rate."
+                ),
+                "construction": (
+                    "tx_unemployment_rate_t - "
+                    "tx_unemployment_rate_t_minus_12"
+                ),
+                "notes": (
+                    "This is a percentage-point change, "
+                    "not a percentage change."
+                ),
+            },
+            {
+                "variable": (
+                    "wti_crude_oil_price_yoy_pct"
+                ),
+                "category": "energy price",
+                "unit": "percent",
+                "source": (
+                    "Derived from FRED: MCOILWTICO"
+                ),
+                "definition": (
+                    "Year-over-year percentage change "
+                    "in the WTI crude-oil price."
+                ),
+                "construction": (
+                    "(wti_crude_oil_price_t / "
+                    "wti_crude_oil_price_t_minus_12 "
+                    "- 1) * 100"
+                ),
+                "notes": (
+                    "The first 12 months are missing."
+                ),
+            },
+            {
+                "variable": (
+                    "henry_hub_natural_gas_price_yoy_pct"
+                ),
+                "category": "energy price",
+                "unit": "percent",
+                "source": (
+                    "Derived from FRED: MHHNGSP"
+                ),
+                "definition": (
+                    "Year-over-year percentage change "
+                    "in the Henry Hub natural-gas price."
+                ),
+                "construction": (
+                    "(henry_hub_natural_gas_price_t / "
+                    "henry_hub_natural_gas_price_t_minus_12 "
+                    "- 1) * 100"
+                ),
+                "notes": (
+                    "The first 12 months are missing."
+                ),
+            },
+        ]
+    )
+
+    for sector in [
+        "residential",
+        "commercial",
+        "industrial",
+    ]:
+        rows.append(
+            {
+                "variable": (
+                    f"{sector}_price_real_2025_01"
+                ),
+                "category": (
+                    "real retail electricity price"
+                ),
+                "unit": (
+                    "January 2025 cents per kWh"
+                ),
+                "source": (
+                    "Derived from EIA retail data "
+                    "and FRED CPIAUCSL"
+                ),
+                "definition": (
+                    f"Inflation-adjusted {sector} "
+                    "retail electricity price, "
+                    "expressed in January 2025 "
+                    "price levels."
+                ),
+                "construction": (
+                    f"{sector}_price_t * "
+                    "CPI_2025_01 / us_cpi_t"
+                ),
+                "notes": (
+                    "The nominal and real price are "
+                    "equal in the January 2025 base "
+                    "period, apart from possible "
+                    "floating-point rounding."
+                ),
+            }
+        )
+
     sectors = {
         "residential": "Residential",
         "commercial": "Commercial",
@@ -364,6 +577,28 @@ def build_variable_dictionary() -> pd.DataFrame:
     )
 
     dictionary = pd.DataFrame(rows)
+
+    duplicate_mask = dictionary[
+        "variable"
+    ].duplicated(
+        keep=False
+    )
+
+    if duplicate_mask.any():
+        duplicated_variables = (
+            dictionary.loc[
+                duplicate_mask,
+                "variable",
+            ]
+            .drop_duplicates()
+            .tolist()
+        )
+
+        raise ValueError(
+            "Duplicate variables were found in "
+            "the variable dictionary: "
+            f"{duplicated_variables}"
+        )
 
     if dictionary["variable"].duplicated().any():
         duplicated = (
