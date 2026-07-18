@@ -98,6 +98,16 @@ PET = FOS - COW - NG - OOG
 - Visualized fuel-specific generation shares.
 - Examined residential electricity sales per customer.
 
+### Time-series features and seasonality
+
+- Constructed trailing 12-month moving averages.
+- Constructed year-over-year percentage changes for level variables.
+- Constructed year-over-year percentage-point changes for generation shares.
+- Added calendar-year, month, and quarter variables.
+- Applied robust STL decomposition to selected monthly indicators.
+- Created a feature-coverage report.
+- Visualized long-run trends and seasonal patterns.
+
 ## Data source
 
 The current datasets are retrieved from the U.S. Energy Information Administration API.
@@ -125,7 +135,8 @@ texas-energy-economy-monitor/
 ├── notebooks/
 │   ├── 01_eia_exploration.ipynb
 │   ├── 02_sector_comparison.ipynb
-│   └── 03_descriptive_visualizations.ipynb
+│   ├── 03_descriptive_visualizations.ipynb
+│   └── 04_seasonality_and_trends.ipynb
 ├── reports/
 │   ├── figures/
 │   └── tables/
@@ -145,7 +156,8 @@ texas-energy-economy-monitor/
 │   ├── finalize_fuel_mapping.py
 │   ├── generation_transform.py
 │   ├── inspect_generation_metadata.py
-│   └── validate_generation_totals.py
+│   ├── validate_generation_totals.py
+│   └── build_time_series_features.py
 ├── .env_example
 ├── .gitignore
 ├── README.md
@@ -258,6 +270,12 @@ python src/build_variable_dictionary.py
 python src/build_descriptive_summary.py
 ```
 
+### Build time_series features
+
+```bash
+python src/build_time_series_features.py
+```
+
 ## Generated outputs
 
 Generated CSV files are stored under:
@@ -335,9 +353,12 @@ The project currently follows these rules:
 
 ## Next milestone
 
-The next stage is to examine seasonality and long-run trends
-in the monthly energy indicators and prepare the dataset for
-integration with public macroeconomic data.
+The next stage is to connect to the FRED API and build a
+monthly macroeconomic and energy-price dataset for Texas.
+
+Planned variables include Texas unemployment and employment,
+WTI crude-oil prices, Henry Hub natural-gas prices, and
+consumer-price indicators.
 
 ## Research direction
 
