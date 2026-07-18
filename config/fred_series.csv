@@ -1,0 +1,6 @@
+﻿series_id,variable_name,category
+MCOILWTICO,wti_crude_oil_price,energy_price
+MHHNGSP,henry_hub_natural_gas_price,energy_price
+TXNA,tx_total_nonfarm_employment,labor_market
+TXUR,tx_unemployment_rate,labor_market
+CPIAUCSL,us_cpi,price_index

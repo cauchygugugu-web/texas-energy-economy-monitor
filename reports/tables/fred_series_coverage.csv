@@ -1,0 +1,6 @@
+﻿series_id,variable_name,category,first_period,last_period,expected_months,returned_months,missing_calendar_months,missing_calendar_periods,missing_values,missing_value_periods
+CPIAUCSL,us_cpi,price_index,2015-01-01,2026-06-01,138,138,0,,1,2025-10
+MCOILWTICO,wti_crude_oil_price,energy_price,2015-01-01,2026-06-01,138,138,0,,0,
+MHHNGSP,henry_hub_natural_gas_price,energy_price,2015-01-01,2026-06-01,138,138,0,,0,
+TXNA,tx_total_nonfarm_employment,labor_market,2015-01-01,2026-05-01,137,137,0,,0,
+TXUR,tx_unemployment_rate,labor_market,2015-01-01,2026-05-01,137,137,0,,1,2025-10

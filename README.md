@@ -1,20 +1,21 @@
 # Texas Energy & Economy Monitor
 
-A reproducible Python project for collecting, cleaning, validating, and organizing Texas electricity-market data from public APIs.
+A reproducible Python project for collecting, cleaning, validating, integrating, and analyzing Texas electricity-market and macroeconomic data from public APIs.
 
-The project is currently focused on building a reliable monthly energy dataset before moving into descriptive analysis, economic interpretation, and potential thesis-related research.
+The project currently focuses on building reliable monthly data infrastructure before moving into more formal economic analysis. It is designed both as an API and data-engineering exercise and as preliminary research infrastructure for future work in energy economics.
 
 ## Project goals
 
 This project is designed to:
 
 - practice working with REST APIs in Python;
-- build a reproducible energy-data pipeline;
-- organize electricity-price and generation data into analysis-ready formats;
-- document data-cleaning and classification decisions;
+- build reproducible EIA and FRED data pipelines;
+- organize electricity-market and macroeconomic data into analysis-ready formats;
+- document data-cleaning, classification, and variable-construction decisions;
+- produce transparent data-quality and coverage reports;
 - create a foundation for future energy-economics research.
 
-The current geographic focus is Texas, but the code is being written so that it can later be extended to other U.S. states.
+The current geographic focus is Texas, but the project structure can later be extended to other U.S. states.
 
 ## Current progress
 
@@ -23,13 +24,8 @@ The current geographic focus is Texas, but the code is being written so that it 
 - Connected to the EIA API.
 - Retrieved monthly Texas retail electricity data from 2015 onward.
 - Collected residential, commercial, and industrial-sector observations.
-- Retrieved:
-  - average retail electricity price;
-  - electricity sales;
-  - retail revenue;
-  - number of customers.
-- Added automatic pagination.
-- Added data-type conversion and structural validation.
+- Retrieved average retail electricity prices, electricity sales, retail revenue, and customer counts.
+- Added automatic pagination, data-type conversion, and structural validation.
 - Built long-format and wide-format retail-electricity datasets.
 - Created month-coverage and missing-value reports.
 - Created a sector-level electricity-price visualization.
@@ -41,17 +37,7 @@ The current geographic focus is Texas, but the code is being written so that it 
 - Preserved the original EIA fuel codes and descriptions.
 - Created a manually reviewed fuel-category mapping.
 - Identified and removed overlapping aggregate and subcategory series.
-- Standardized fuel groups including:
-  - Coal;
-  - Natural Gas;
-  - Other Gases;
-  - Petroleum;
-  - Nuclear;
-  - Hydroelectric;
-  - Wind;
-  - Solar;
-  - Biomass;
-  - Other.
+- Standardized fuel groups including Coal, Natural Gas, Other Gases, Petroleum, Nuclear, Hydroelectric, Wind, Solar, Biomass, and Other.
 - Built clean long-format and wide-format generation datasets.
 - Added fuel-group coverage checks.
 - Derived missing aggregate petroleum observations using:
@@ -66,7 +52,7 @@ PET = FOS - COW - NG - OOG
 
 ### Integrated monthly energy dataset
 
-- Converted the retail-electricity data from sector-level long format to monthly wide format.
+- Converted retail-electricity data from sector-level long format to monthly wide format.
 - Aligned retail-electricity and generation data by month.
 - Merged the two datasets using one-to-one monthly matching.
 - Created a merge-coverage report for unmatched months.
@@ -108,15 +94,32 @@ PET = FOS - COW - NG - OOG
 - Created a feature-coverage report.
 - Visualized long-run trends and seasonal patterns.
 
-## Data source
+### FRED macroeconomic and energy-price data
 
-The current datasets are retrieved from the U.S. Energy Information Administration API.
+- Connected to the FRED API.
+- Created a configuration-driven FRED series list.
+- Retrieved monthly observations for:
+  - Texas unemployment rate;
+  - Texas total nonfarm employment;
+  - WTI crude-oil price;
+  - Henry Hub natural-gas price;
+  - U.S. CPI.
+- Retrieved and preserved FRED series metadata.
+- Standardized all monthly dates to the first day of the month.
+- Preserved missing FRED observations as missing values rather than converting them to zero.
+- Built long-format and wide-format FRED datasets.
+- Created FRED metadata and coverage reports.
+- Added automatic retries and HTTP error handling.
 
-Main data categories:
+## Data sources
 
-- retail electricity sales and prices;
-- electricity generation by fuel type;
-- API metadata and facet definitions.
+### U.S. Energy Information Administration
+
+The EIA API currently provides retail electricity data, electricity generation by fuel type, and route metadata.
+
+### Federal Reserve Economic Data
+
+The FRED API currently provides Texas labor-market indicators, energy prices, and U.S. CPI.
 
 API keys are stored locally in a `.env` file and are not committed to the repository.
 
@@ -125,6 +128,7 @@ API keys are stored locally in a `.env` file and are not committed to the reposi
 ```text
 texas-energy-economy-monitor/
 ├── config/
+│   ├── fred_series.csv
 │   └── fuel_mapping.csv
 ├── data/
 │   ├── metadata/
@@ -140,31 +144,35 @@ texas-energy-economy-monitor/
 ├── reports/
 │   ├── figures/
 │   └── tables/
+│       ├── energy_indicator_coverage.csv
 │       ├── energy_indicator_summary.csv
-│       └── energy_indicator_coverage.csv
+│       ├── fred_series_coverage.csv
+│       ├── fred_series_metadata.csv
+│       └── time_series_feature_coverage.csv
 ├── src/
 │   ├── build_descriptive_summary.py
 │   ├── build_energy_indicators.py
+│   ├── build_fred_dataset.py
 │   ├── build_generation_dataset.py
 │   ├── build_integrated_energy_dataset.py
 │   ├── build_price_panel.py
 │   ├── build_retail_dataset.py
+│   ├── build_time_series_features.py
 │   ├── build_variable_dictionary.py
+│   ├── create_fred_series_config.py
 │   ├── create_fuel_mapping.py
 │   ├── fetch_eia.py
+│   ├── fetch_fred.py
 │   ├── fetch_generation.py
 │   ├── finalize_fuel_mapping.py
 │   ├── generation_transform.py
 │   ├── inspect_generation_metadata.py
-│   ├── validate_generation_totals.py
-│   └── build_time_series_features.py
-├── .env_example
+│   └── validate_generation_totals.py
+├── .env.example
 ├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
-
-The exact file list may change as the project is refactored.
 
 ## Setup
 
@@ -177,8 +185,6 @@ cd texas-energy-economy-monitor
 
 ### 2. Create and activate a virtual environment
 
-On Windows PowerShell:
-
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
@@ -190,12 +196,13 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### 4. Configure the EIA API key
+### 4. Configure API keys
 
 Create a local `.env` file in the project root:
 
 ```text
 EIA_API_KEY=your_eia_api_key_here
+FRED_API_KEY=your_fred_api_key_here
 ```
 
 Do not commit the `.env` file.
@@ -208,46 +215,14 @@ Do not commit the `.env` file.
 python src/build_retail_dataset.py
 ```
 
-### Build the retail-price panel
-
-```bash
-python src/build_price_panel.py
-```
-
-### Inspect generation metadata
-
-```bash
-python src/inspect_generation_metadata.py
-```
-
-### Retrieve generation data
-
-```bash
-python src/fetch_generation.py
-```
-
 ### Build and validate the clean generation dataset
 
 ```bash
 python src/build_generation_dataset.py
 ```
 
-### Run the independent generation-total validation
-
-```bash
-python src/validate_generation_totals.py
-```
-
 ### Build the integrated monthly energy dataset
 
-First generate the retail and generation datasets:
-
-```bash
-python src/build_retail_dataset.py
-python src/build_generation_dataset.py
-```
-
-Then merge them
 ```bash
 python src/build_integrated_energy_dataset.py
 ```
@@ -270,44 +245,53 @@ python src/build_variable_dictionary.py
 python src/build_descriptive_summary.py
 ```
 
-### Build time_series features
+### Build time-series features
 
 ```bash
 python src/build_time_series_features.py
 ```
 
+### Create the FRED series configuration
+
+```bash
+python src/create_fred_series_config.py
+```
+
+### Test the FRED API connection
+
+```bash
+python src/fetch_fred.py
+```
+
+### Build the FRED macroeconomic dataset
+
+```bash
+python src/build_fred_dataset.py
+```
+
 ## Generated outputs
 
-Generated CSV files are stored under:
+Generated data files are stored under:
 
 ```text
 data/processed/
 ```
 
-Important outputs include:
+Important FRED outputs include:
 
 ```text
-eia_tx_retail_electricity.csv
-eia_tx_retail_prices_long.csv
-eia_tx_retail_prices_wide.csv
-eia_tx_generation_by_fuel.csv
-eia_tx_generation_clean_long.csv
-eia_tx_generation_clean_wide.csv
-eia_tx_generation_group_coverage.csv
-eia_tx_generation_derived_petroleum.csv
-eia_tx_generation_reconciliation.csv
-eia_tx_integrated_energy_monthly.csv
-eia_tx_integrated_merge_report.csv
-eia_tx_energy_indicators_monthly.csv
-eia_tx_retail_price_validation.csv
+fred_tx_macro_energy_long.csv
+fred_tx_macro_energy_wide.csv
+fred_series_metadata.csv
+fred_series_coverage.csv
 ```
 
-Descriptive reports are stored under:
+Most generated data files are excluded from version control because they can be reproduced from the source code.
+
+Small documentation and validation outputs are stored under:
 
 ```text
 reports/tables/
-├── energy_indicator_summary.csv
-└── energy_indicator_coverage.csv
 ```
 
 The variable dictionary is stored at:
@@ -316,60 +300,50 @@ The variable dictionary is stored at:
 docs/variable_dictionary.csv
 ```
 
-Most generated data files are excluded from version control because they can be reproduced from the source code.
-
-The integrated dataset contains one row per month and combines:
-
-- residential, commercial, and industrial retail-electricity measures;
-- monthly electricity generation by standardized fuel group.
-
-The merge report records whether each month is available in the retail dataset, the generation dataset, or both.
-
 ## Data-validation principles
 
-The project currently follows these rules:
-
-- raw API responses are not manually overwritten;
-- dates are converted to monthly datetime values;
-- numeric API fields are explicitly converted from strings;
-- duplicate month-state-sector or month-fuel observations are rejected;
-- aggregate fuel categories are not added to their own subcategories;
-- valid negative generation values are preserved;
-- derived observations are stored separately for auditing;
-- selected fuel components must reproduce the reported total within a defined numerical tolerance.
-- retail and generation datasets are merged using one-to-one monthly validation;
-- unmatched months are documented rather than silently discarded;
-- missing observations are not automatically converted to zero;
-- the integrated dataset retains only months available from both source datasets.
+- Raw API responses are not manually overwritten.
+- API keys are never stored in committed source files.
+- Dates are standardized to monthly datetime values.
+- Numeric API fields are explicitly converted from strings.
+- Duplicate monthly observations are rejected.
+- Aggregate fuel categories are not added to their own subcategories.
+- Missing observations are not automatically converted to zero.
+- Valid negative generation values are preserved.
+- Derived observations are stored separately for auditing.
+- Selected fuel components must reproduce reported generation totals within a defined tolerance.
+- Retail and generation datasets are merged using one-to-one monthly validation.
+- Unmatched months are documented rather than silently discarded.
+- FRED frequency, units, seasonal adjustment, and coverage are preserved in metadata reports.
 
 ## Current limitations
 
-- The project currently covers Texas only.
-- The analysis is primarily descriptive.
-- Electricity-generation categories require careful treatment because EIA provides both aggregate and detailed fuel series.
-- Some observations may be revised by the data provider.
+- The project currently focuses on Texas.
+- The analysis remains primarily descriptive.
+- Some EIA and FRED observations may be revised by the data providers.
+- Source series may have different publication lags and latest available months.
 - No causal conclusions are drawn from the current datasets.
-- Macroeconomic and labor-market data have not yet been merged into the project.
+- Quarterly state GDP and detailed industry-level labor-market data have not yet been added.
 
 ## Next milestone
 
-The next stage is to connect to the FRED API and build a
-monthly macroeconomic and energy-price dataset for Texas.
+The next stage is to merge the monthly FRED dataset with the EIA time-series feature dataset.
 
-Planned variables include Texas unemployment and employment,
-WTI crude-oil prices, Henry Hub natural-gas prices, and
-consumer-price indicators.
+Planned tasks include:
+
+- align EIA and FRED observations by month;
+- create a merge-coverage and unmatched-month report;
+- construct real retail electricity prices using CPI;
+- construct year-over-year employment growth;
+- construct year-over-year oil and natural-gas price changes;
+- document units and seasonal-adjustment differences;
+- produce the first integrated Texas energy-and-economy dataset.
 
 ## Research direction
 
-The project may later serve as preliminary data infrastructure for research on topics such as:
+The project may later support research on renewable-energy penetration, retail electricity prices, natural-gas dependence, energy-price shocks, regional economic activity, and changes in the Texas electricity-generation mix.
 
-- renewable-energy penetration and retail electricity prices;
-- natural-gas dependence and electricity-market outcomes;
-- energy-price shocks and regional economic activity;
-- changes in the Texas electricity-generation mix.
-
-At the current stage, the priority is data reliability and reproducibility rather than causal inference.
+At the current stage, the priority is data reliability, transparent variable construction, and reproducibility rather than causal inference.
 
 ## License
 
