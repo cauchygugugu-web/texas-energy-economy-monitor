@@ -11,11 +11,11 @@ OUTPUT_PATH = (
     / "variable_dictionary.csv"
 )
 
-INDICATOR_DATA_PATH = (
+DATASET_PATH = (
     PROJECT_ROOT
     / "data"
     / "processed"
-    / "eia_tx_energy_indicators_monthly.csv"
+    / "tx_energy_economy_monthly.csv"
 )
 
 
@@ -600,22 +600,6 @@ def build_variable_dictionary() -> pd.DataFrame:
             f"{duplicated_variables}"
         )
 
-    if dictionary["variable"].duplicated().any():
-        duplicated = (
-            dictionary.loc[
-                dictionary["variable"].duplicated(
-                    keep=False
-                ),
-                "variable",
-            ]
-            .drop_duplicates()
-            .tolist()
-        )
-
-        raise ValueError(
-            f"Duplicate variables in dictionary: {duplicated}"
-        )
-
     return (
         dictionary
         .sort_values(
@@ -628,18 +612,19 @@ def build_variable_dictionary() -> pd.DataFrame:
 def check_dictionary_coverage(
     dictionary: pd.DataFrame,
 ) -> None:
-    """Compare documented variables with the indicator dataset."""
+    """Compare documented variables with the integrated dataset."""
 
-    if not INDICATOR_DATA_PATH.exists():
+    if not DATASET_PATH.exists():
         print(
-            "Indicator dataset was not found; "
-            "coverage check was skipped."
+            "Integrated dataset was not found; "
+            "coverage check was skipped. Run "
+            "`python src/build_energy_economy_dataset.py` first."
         )
         return
 
     data_columns = set(
         pd.read_csv(
-            INDICATOR_DATA_PATH,
+            DATASET_PATH,
             nrows=0,
         ).columns
     )
