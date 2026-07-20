@@ -151,7 +151,8 @@ texas-energy-economy-monitor/
 │   ├── 01_eia_exploration.ipynb
 │   ├── 02_sector_comparison.ipynb
 │   ├── 03_descriptive_visualizations.ipynb
-│   └── 04_seasonality_and_trends.ipynb
+│   ├── 04_seasonality_and_trends.ipynb
+│   └── 05_energy_economy_overview.ipynb
 ├── reports/
 │   ├── figures/
 │   └── tables/
@@ -159,7 +160,10 @@ texas-energy-economy-monitor/
 │       ├── energy_indicator_summary.csv
 │       ├── fred_series_coverage.csv
 │       ├── fred_series_metadata.csv
-│       └── time_series_feature_coverage.csv
+│       ├── time_series_feature_coverage.csv
+│       ├── energy_economy_correlation_matrix.csv
+│       ├── energy_economy_selected_summary.csv
+│       └── wti_employment_lag_correlations.csv
 ├── src/
 │   ├── build_descriptive_summary.py
 │   ├── build_energy_indicators.py
