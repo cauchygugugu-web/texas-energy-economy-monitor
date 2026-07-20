@@ -122,6 +122,17 @@ PET = FOS - COW - NG - OOG
 - Constructed CPI-adjusted retail electricity prices in January 2025 price levels, measured in cents per kWh.
 - Created a variable-coverage report for the integrated dataset.
 
+### Texas weather-data pipeline
+
+- Connected to the NOAA NCEI Climate at a Glance API.
+- Retrieved statewide monthly Texas weather indicators.
+- Added monthly average temperature and precipitation.
+- Added monthly heating and cooling degree days.
+- Preserved NOAA departures from the 1901–2000 base period.
+- Created weather-series metadata and coverage reports.
+- Merged weather data with the existing energy-and-economy dataset.
+- Created the final monthly analysis sample and merge report.
+
 ## Data sources
 
 ### U.S. Energy Information Administration
@@ -140,7 +151,8 @@ API keys are stored locally in a `.env` file and are not committed to the reposi
 texas-energy-economy-monitor/
 ├── config/
 │   ├── fred_series.csv
-│   └── fuel_mapping.csv
+│   ├── fuel_mapping.csv
+│   └── weather_series.csv
 ├── data/
 │   ├── metadata/
 │   ├── processed/
@@ -163,7 +175,11 @@ texas-energy-economy-monitor/
 │       ├── time_series_feature_coverage.csv
 │       ├── energy_economy_correlation_matrix.csv
 │       ├── energy_economy_selected_summary.csv
-│       └── wti_employment_lag_correlations.csv
+│       ├── wti_employment_lag_correlations.csv
+│       ├── weather_series_metadata.csv
+│       ├── weather_series_coverage.csv
+│       ├── analysis_sample_merge_report.csv
+│       └── analysis_sample_coverage.csv
 ├── src/
 │   ├── build_descriptive_summary.py
 │   ├── build_energy_indicators.py
@@ -183,7 +199,12 @@ texas-energy-economy-monitor/
 │   ├── generation_transform.py
 │   ├── inspect_generation_metadata.py
 │   ├── validate_generation_totals.py
-│   └── build_energy_economy_dataset.py
+│   ├── build_energy_economy_dataset.py
+│   ├── create_weather_series_config.py
+│   ├── inspect_weather_api.py
+│   ├── fetch_weather.py
+│   ├── build_weather_dataset.py
+│   └── build_analysis_sample.py
 ├── .env.example
 ├── .gitignore
 ├── README.md
@@ -291,6 +312,21 @@ python src/build_fred_dataset.py
 python src/build_energy_economy_dataset.py
 ```
 
+### Create the weather-series configuration
+```bash
+python src/create_weather_series_config.py
+```
+
+### Build the Texas weather dataset
+```bash
+python src/build_weather_dataset.py
+```
+
+### Build the final analysis sample
+```bash
+python src/build_analysis_sample.py
+```
+
 ## Generated outputs
 
 Generated data files are stored under:
@@ -349,17 +385,18 @@ docs/variable_dictionary.csv
 
 ## Next milestone
 
-The next stage is to build a reproducible monthly Texas
-weather-data pipeline and merge weather indicators into the
-energy-and-economy analysis sample.
+The next stage is to estimate baseline monthly time-series
+association models using the integrated Texas analysis sample.
 
 Planned work includes:
 
-- monthly Texas temperature;
-- monthly precipitation;
+- real residential electricity prices as the main outcome;
+- Henry Hub natural-gas prices and generation shares;
 - heating and cooling degree days;
-- weather metadata and coverage reports;
-- monthly integration with the existing energy-and-economy dataset.
+- month-of-year controls;
+- heteroskedasticity and autocorrelation-consistent standard errors;
+- residual and multicollinearity diagnostics;
+- careful interpretation as descriptive associations rather than causal effects.
 
 ## Research direction
 

@@ -15,7 +15,7 @@ DATASET_PATH = (
     PROJECT_ROOT
     / "data"
     / "processed"
-    / "tx_energy_economy_monthly.csv"
+    / "tx_energy_economy_analysis_sample.csv"
 )
 
 
@@ -575,6 +575,160 @@ def build_variable_dictionary() -> pd.DataFrame:
             },
         ]
     )
+
+    rows.extend(
+        [
+            {
+                "variable": "tx_average_temperature",
+                "category": "weather",
+                "unit": "degrees Fahrenheit",
+                "source": (
+                    "NOAA NCEI Climate at a Glance"
+                ),
+                "definition": (
+                    "Texas statewide monthly average "
+                    "temperature."
+                ),
+                "construction": (
+                    "Original NOAA statewide monthly "
+                    "temperature series."
+                ),
+                "notes": (
+                    "Statewide NClimDiv estimate."
+                ),
+            },
+            {
+                "variable": "tx_precipitation",
+                "category": "weather",
+                "unit": "inches",
+                "source": (
+                    "NOAA NCEI Climate at a Glance"
+                ),
+                "definition": (
+                    "Texas statewide monthly total "
+                    "precipitation."
+                ),
+                "construction": (
+                    "Original NOAA statewide monthly "
+                    "precipitation series."
+                ),
+                "notes": (
+                    "Statewide NClimDiv estimate."
+                ),
+            },
+            {
+                "variable": "tx_heating_degree_days",
+                "category": "weather and energy demand",
+                "unit": "Fahrenheit degree days",
+                "source": (
+                    "NOAA NCEI Climate at a Glance"
+                ),
+                "definition": (
+                    "Texas statewide monthly heating "
+                    "degree days."
+                ),
+                "construction": (
+                    "Original NOAA statewide monthly "
+                    "heating-degree-day series."
+                ),
+                "notes": (
+                    "Higher values indicate greater "
+                    "weather-related heating demand."
+                ),
+            },
+            {
+                "variable": "tx_cooling_degree_days",
+                "category": "weather and energy demand",
+                "unit": "Fahrenheit degree days",
+                "source": (
+                    "NOAA NCEI Climate at a Glance"
+                ),
+                "definition": (
+                    "Texas statewide monthly cooling "
+                    "degree days."
+                ),
+                "construction": (
+                    "Original NOAA statewide monthly "
+                    "cooling-degree-day series."
+                ),
+                "notes": (
+                    "Higher values indicate greater "
+                    "weather-related cooling demand."
+                ),
+            },
+        ]
+    )
+
+    weather_departure_variables = [
+        {
+            "variable": (
+                "tx_average_temperature_departure"
+            ),
+            "unit": "degrees Fahrenheit",
+            "definition": (
+                "Departure of Texas monthly average "
+                "temperature from the NOAA base period."
+            ),
+        },
+        {
+            "variable": (
+                "tx_precipitation_departure"
+            ),
+            "unit": "inches",
+            "definition": (
+                "Departure of Texas monthly precipitation "
+                "from the NOAA base period."
+            ),
+        },
+        {
+            "variable": (
+                "tx_heating_degree_days_departure"
+            ),
+            "unit": "Fahrenheit degree days",
+            "definition": (
+                "Departure of Texas monthly heating "
+                "degree days from the NOAA base period."
+            ),
+        },
+        {
+            "variable": (
+                "tx_cooling_degree_days_departure"
+            ),
+            "unit": "Fahrenheit degree days",
+            "definition": (
+                "Departure of Texas monthly cooling "
+                "degree days from the NOAA base period."
+            ),
+        },
+    ]
+
+    for weather_variable in (
+            weather_departure_variables
+    ):
+        rows.append(
+            {
+                "variable": (
+                    weather_variable["variable"]
+                ),
+                "category": "weather departure",
+                "unit": weather_variable["unit"],
+                "source": (
+                    "NOAA NCEI Climate at a Glance"
+                ),
+                "definition": (
+                    weather_variable["definition"]
+                ),
+                "construction": (
+                    "NOAA reported departure from "
+                    "the 1901–2000 base period."
+                ),
+                "notes": (
+                    "Positive and negative values "
+                    "represent deviations from the "
+                    "NOAA climatological baseline."
+                ),
+            }
+        )
 
     dictionary = pd.DataFrame(rows)
 
