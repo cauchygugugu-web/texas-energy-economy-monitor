@@ -119,7 +119,7 @@ PET = FOS - COW - NG - OOG
 - Constructed year-over-year Texas employment growth.
 - Constructed year-over-year unemployment-rate changes in percentage points.
 - Constructed year-over-year WTI and Henry Hub price changes.
-- Constructed CPI-adjusted retail electricity prices in January 2025 dollars.
+- Constructed CPI-adjusted retail electricity prices in January 2025 price levels, measured in cents per kWh.
 - Created a variable-coverage report for the integrated dataset.
 
 ## Data sources
@@ -349,16 +349,17 @@ docs/variable_dictionary.csv
 
 ## Next milestone
 
-The next stage is to create the first descriptive overview
-of the integrated Texas energy-and-economy dataset.
+The next stage is to build a reproducible monthly Texas
+weather-data pipeline and merge weather indicators into the
+energy-and-economy analysis sample.
 
 Planned work includes:
 
-- real retail electricity prices and natural-gas prices;
-- Texas employment growth and crude-oil price changes;
-- renewable generation shares and real electricity prices;
-- correlation and lag-pattern exploration;
-- documentation of descriptive relationships without causal claims.
+- monthly Texas temperature;
+- monthly precipitation;
+- heating and cooling degree days;
+- weather metadata and coverage reports;
+- monthly integration with the existing energy-and-economy dataset.
 
 ## Research direction
 
