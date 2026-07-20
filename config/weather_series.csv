@@ -1,0 +1,5 @@
+﻿location_code,parameter,variable_name,unit,category,geography
+41,cdd,tx_cooling_degree_days,Degrees Days Fahrenheit,energy demand,Texas statewide
+41,hdd,tx_heating_degree_days,Degrees Days Fahrenheit,energy demand,Texas statewide
+41,pcp,tx_precipitation,inches,precipitation,Texas statewide
+41,tavg,tx_average_temperature,degrees Fahrenheit,temperature,Texas statewide

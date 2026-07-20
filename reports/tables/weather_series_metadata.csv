@@ -1,0 +1,5 @@
+﻿location_code,parameter,variable_name,title,api_units,configured_unit,unit_match,base_period,category,geography,requested_start_year,requested_end_year,source
+41,cdd,tx_cooling_degree_days,Texas Cooling Degree Days,Degrees Days Fahrenheit,Degrees Days Fahrenheit,True,1901-2000,energy demand,Texas statewide,2015,2026,NOAA NCEI Climate at a Glance Statewide Time Series
+41,hdd,tx_heating_degree_days,Texas Heating Degree Days,Degrees Days Fahrenheit,Degrees Days Fahrenheit,True,1901-2000,energy demand,Texas statewide,2015,2026,NOAA NCEI Climate at a Glance Statewide Time Series
+41,pcp,tx_precipitation,Texas Precipitation,Inches,inches,True,1901-2000,precipitation,Texas statewide,2015,2026,NOAA NCEI Climate at a Glance Statewide Time Series
+41,tavg,tx_average_temperature,Texas Average Temperature,Degrees Fahrenheit,degrees Fahrenheit,True,1901-2000,temperature,Texas statewide,2015,2026,NOAA NCEI Climate at a Glance Statewide Time Series
