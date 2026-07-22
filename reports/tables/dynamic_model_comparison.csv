@@ -1,0 +1,3 @@
+specification,observations,r_squared,adjusted_r_squared,aic,bic,durbin_watson,ljung_box_p_value_lag_12
+"Static Model 4, matched sample",133,0.3335,0.235,210.1163,262.1426,0.4155,0.0
+Dynamic Model,133,0.8213,0.793,37.0769,91.9935,2.4952,0.0124

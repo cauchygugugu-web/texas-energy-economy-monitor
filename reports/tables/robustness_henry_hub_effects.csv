@@ -1,0 +1,5 @@
+specification,gas_variable,effect_scale,coefficient,hac_standard_error,p_value,confidence_interval_95_lower,confidence_interval_95_upper,observations,r_squared,adjusted_r_squared
+Baseline Model 4,henry_hub_natural_gas_price,Cents/kWh per $/MMBtu,0.0532,0.0483,0.2709,-0.0415,0.1478,135,0.3057,0.2048
+Excluding February 2021,henry_hub_natural_gas_price,Cents/kWh per $/MMBtu,0.0497,0.0485,0.3052,-0.0453,0.1447,134,0.3097,0.2086
+Lagged Henry Hub price,henry_hub_natural_gas_price_lag_1,Cents/kWh per lagged $/MMBtu,0.0566,0.0486,0.2446,-0.0387,0.1518,134,0.345,0.249
+Year-over-year changes,henry_hub_price_yoy_pct,Approximate year-over-year elasticity,0.0265,0.0097,0.006,0.0076,0.0455,123,0.1937,0.1593

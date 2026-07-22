@@ -1,0 +1,4 @@
+specification,observations,r_squared,adjusted_r_squared,aic,bic,durbin_watson,ljung_box_p_lag_1,ljung_box_p_lag_6,ljung_box_p_lag_12
+Static matched model,131,0.3557,0.2588,200.8062,252.5597,0.4313,0.0,0.0,0.0
+AR(1) matched model,131,0.8165,0.787,38.2721,92.9008,2.4721,0.0044,0.092,0.0939
+AR(2) model,131,0.8334,0.8049,27.6127,85.1167,2.1297,0.3117,0.0704,0.0406

@@ -1,8 +1,8 @@
 # Texas Energy & Economy Monitor
 
-A reproducible Python project for collecting, cleaning, validating, integrating, and analyzing Texas electricity-market and macroeconomic data from public APIs.
+A reproducible Python project for collecting, cleaning, validating, integrating, and analyzing Texas electricity-market, weather, and macroeconomic data from public APIs.
 
-The project currently focuses on building reliable monthly data infrastructure before moving into more formal economic analysis. It is designed both as an API and data-engineering exercise and as preliminary research infrastructure for future work in energy economics.
+The project combines reliable monthly data infrastructure with descriptive analysis and baseline time-series modeling. It is designed both as an API and data-engineering exercise and as preliminary research infrastructure for future work in energy economics.
 
 ## Project goals
 
@@ -13,6 +13,7 @@ This project is designed to:
 - organize electricity-market and macroeconomic data into analysis-ready formats;
 - document data-cleaning, classification, and variable-construction decisions;
 - produce transparent data-quality and coverage reports;
+- estimate reproducible baseline time-series association models;
 - create a foundation for future energy-economics research.
 
 The current geographic focus is Texas, but the project structure can later be extended to other U.S. states.
@@ -133,6 +134,20 @@ PET = FOS - COW - NG - OOG
 - Merged weather data with the existing energy-and-economy dataset.
 - Created the final monthly analysis sample and merge report.
 
+### Baseline monthly time-series models
+
+- Added `notebooks/06_baseline_time_series_models.ipynb`.
+- Examined the relationship between Henry Hub natural-gas prices and real Texas residential electricity prices.
+- Controlled for lagged residential electricity prices, generation shares, heating and cooling degree days, a time trend, and month-of-year effects.
+- Estimated static ordinary least-squares models with heteroskedasticity and autocorrelation-consistent standard errors.
+- Evaluated residual autocorrelation, multicollinearity, influential observations, and sensitivity to February 2021.
+- Compared AR(1) through AR(4) dynamic specifications on common estimation samples.
+- Selected a stable AR(3) model using information criteria, residual diagnostics, and model parsimony.
+- Obtained a Durbin–Watson statistic of 1.9615 and nonsignificant Breusch–Godfrey tests at maximum lags 1, 6, and 12 for the preferred model.
+- Estimated a contemporaneous Henry Hub coefficient of approximately 0.0734 cents per kWh for a $1/MMBtu increase, with a HAC p-value of approximately 0.0006.
+- Estimated an autoregressive-coefficient sum of approximately 0.8893 and an implied long-run multiplier of approximately 0.66 cents per kWh.
+- Interpreted all model estimates as conditional associations rather than causal effects.
+
 ## Data sources
 
 ### U.S. Energy Information Administration
@@ -142,6 +157,10 @@ The EIA API currently provides retail electricity data, electricity generation b
 ### Federal Reserve Economic Data
 
 The FRED API currently provides Texas labor-market indicators, energy prices, and U.S. CPI.
+
+### NOAA National Centers for Environmental Information
+
+The NOAA Climate at a Glance API provides statewide Texas temperature, precipitation, heating-degree-day, and cooling-degree-day observations.
 
 API keys are stored locally in a `.env` file and are not committed to the repository.
 
@@ -164,9 +183,12 @@ texas-energy-economy-monitor/
 │   ├── 02_sector_comparison.ipynb
 │   ├── 03_descriptive_visualizations.ipynb
 │   ├── 04_seasonality_and_trends.ipynb
-│   └── 05_energy_economy_overview.ipynb
+│   ├── 05_energy_economy_overview.ipynb
+│   └── 06_baseline_time_series_models.ipynb
 ├── reports/
 │   ├── figures/
+│   │   ├── baseline_model_4_residual_diagnostics.png
+│   │   └── preferred_ar3_residual_acf_pacf.png
 │   └── tables/
 │       ├── energy_indicator_coverage.csv
 │       ├── energy_indicator_summary.csv
@@ -179,7 +201,13 @@ texas-energy-economy-monitor/
 │       ├── weather_series_metadata.csv
 │       ├── weather_series_coverage.csv
 │       ├── analysis_sample_merge_report.csv
-│       └── analysis_sample_coverage.csv
+│       ├── analysis_sample_coverage.csv
+│       ├── baseline_model_coefficients.csv
+│       ├── baseline_residual_diagnostics.csv
+│       ├── robustness_henry_hub_effects.csv
+│       ├── ar_order_candidate_comparison.csv
+│       ├── preferred_ar3_model_results.csv
+│       └── preferred_ar3_residual_correlations.csv
 ├── src/
 │   ├── build_descriptive_summary.py
 │   ├── build_energy_indicators.py
@@ -327,6 +355,14 @@ python src/build_weather_dataset.py
 python src/build_analysis_sample.py
 ```
 
+### Run the baseline monthly time-series analysis
+
+After building the final analysis sample, open and run:
+
+```text
+notebooks/06_baseline_time_series_models.ipynb
+```
+
 ## Generated outputs
 
 Generated data files are stored under:
@@ -358,6 +394,20 @@ The variable dictionary is stored at:
 docs/variable_dictionary.csv
 ```
 
+Important baseline-model outputs include:
+
+```text
+reports/tables/baseline_model_coefficients.csv
+reports/tables/baseline_residual_diagnostics.csv
+reports/tables/robustness_henry_hub_effects.csv
+reports/tables/ar_order_candidate_comparison.csv
+reports/tables/ar_order_key_coefficients.csv
+reports/tables/preferred_ar3_model_results.csv
+reports/tables/preferred_ar3_residual_correlations.csv
+reports/figures/baseline_model_4_residual_diagnostics.png
+reports/figures/preferred_ar3_residual_acf_pacf.png
+```
+
 ## Data-validation principles
 
 - Raw API responses are not manually overwritten.
@@ -373,36 +423,35 @@ docs/variable_dictionary.csv
 - Retail and generation datasets are merged using one-to-one monthly validation.
 - Unmatched months are documented rather than silently discarded.
 - FRED frequency, units, seasonal adjustment, and coverage are preserved in metadata reports.
+- Competing dynamic models are compared on common estimation samples.
+- Preferred-model residual autocorrelation is assessed using Durbin–Watson, Ljung–Box, Breusch–Godfrey, ACF, and PACF diagnostics.
 
 ## Current limitations
 
 - The project currently focuses on Texas.
-- The analysis remains primarily descriptive.
+- The empirical analysis is observational and does not identify causal effects.
 - Some EIA and FRED observations may be revised by the data providers.
 - Source series may have different publication lags and latest available months.
-- No causal conclusions are drawn from the current datasets.
+- Statewide monthly averages conceal variation across utilities, retail plans, customer groups, and regions.
+- The dynamic specification approximates potentially heterogeneous and nonlinear retail-price adjustment.
+- The implied long-run multiplier is sensitive to uncertainty in the estimated autoregressive persistence.
 - Quarterly state GDP and detailed industry-level labor-market data have not yet been added.
 
 ## Next milestone
 
-The next stage is to estimate baseline monthly time-series
-association models using the integrated Texas analysis sample.
+The preferred AR(3) specification now provides a reproducible benchmark for future empirical extensions. Potential next steps include:
 
-Planned work includes:
-
-- real residential electricity prices as the main outcome;
-- Henry Hub natural-gas prices and generation shares;
-- heating and cooling degree days;
-- month-of-year controls;
-- heteroskedasticity and autocorrelation-consistent standard errors;
-- residual and multicollinearity diagnostics;
-- careful interpretation as descriptive associations rather than causal effects.
+- evaluating out-of-sample forecasting performance;
+- adding wholesale electricity-price measures;
+- examining nonlinear or asymmetric natural-gas price transmission;
+- studying variation across utilities, retail plans, or Texas regions where suitable data are available;
+- developing a formal identification strategy for causal analysis.
 
 ## Research direction
 
 The project may later support research on renewable-energy penetration, retail electricity prices, natural-gas dependence, energy-price shocks, regional economic activity, and changes in the Texas electricity-generation mix.
 
-At the current stage, the priority is data reliability, transparent variable construction, and reproducibility rather than causal inference.
+At the current stage, the priority remains data reliability, transparent variable construction, reproducible model comparison, and cautious interpretation rather than causal inference.
 
 ## License
 

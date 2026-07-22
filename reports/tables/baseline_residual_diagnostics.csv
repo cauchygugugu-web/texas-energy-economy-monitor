@@ -1,0 +1,5 @@
+model,durbin_watson,residual_mean,residual_standard_deviation
+Model 1,0.3495,-0.0,0.5771
+Model 2,0.4104,-0.0,0.5337
+Model 3,0.4076,-0.0,0.4942
+Model 4,0.3792,-0.0,0.4813
