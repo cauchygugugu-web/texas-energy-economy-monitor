@@ -1,0 +1,5 @@
+model,model_label,months_better_than_naive,months_worse_than_naive,months_tied_with_naive,mean_absolute_error_gain,median_absolute_error_gain,total_squared_error_gain
+seasonal_naive,Seasonal naive,11,13,0,-0.061173898793108306,-0.052689311387235094,-0.8997783834474762
+ar3_price_history,AR(3): price history,15,9,0,0.04417515669086051,0.03523518984881502,0.8119933676451957
+ar3_lagged_controls,AR(3): lagged controls,13,11,0,0.014010286450550543,0.04210494010193688,0.2556762916535087
+ar3_conditional_controls,AR(3): conditional controls,13,11,0,-0.0048566519700764905,0.04383106843758178,-0.023519067109237624

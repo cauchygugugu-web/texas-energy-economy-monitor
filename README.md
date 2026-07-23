@@ -2,7 +2,7 @@
 
 A reproducible Python project for collecting, cleaning, validating, integrating, and analyzing Texas electricity-market, weather, and macroeconomic data from public APIs.
 
-The project combines reliable monthly data infrastructure with descriptive analysis and baseline time-series modeling. It is designed both as an API and data-engineering exercise and as preliminary research infrastructure for future work in energy economics.
+The project combines reliable monthly data infrastructure with descriptive analysis, baseline time-series modeling, and pseudo-out-of-sample forecasting. It is designed both as an API and data-engineering exercise and as preliminary research infrastructure for future work in energy economics.
 
 ## Project goals
 
@@ -14,6 +14,7 @@ This project is designed to:
 - document data-cleaning, classification, and variable-construction decisions;
 - produce transparent data-quality and coverage reports;
 - estimate reproducible baseline time-series association models;
+- evaluate short-term forecasting models using a reproducible expanding-window design;
 - create a foundation for future energy-economics research.
 
 The current geographic focus is Texas, but the project structure can later be extended to other U.S. states.
@@ -148,6 +149,22 @@ PET = FOS - COW - NG - OOG
 - Estimated an autoregressive-coefficient sum of approximately 0.8893 and an implied long-run multiplier of approximately 0.66 cents per kWh.
 - Interpreted all model estimates as conditional associations rather than causal effects.
 
+### Pseudo-out-of-sample forecasting
+
+- Added `notebooks/07_out_of_sample_forecasting.ipynb`.
+- Compared a previous-month naive benchmark, a seasonal-naive benchmark, and three AR(3) forecasting specifications.
+- Generated one-step-ahead forecasts over a continuous 24-month evaluation period from October 2023 through September 2025.
+- Re-estimated each regression model using an expanding estimation window.
+- Distinguished feasible forecasts using lagged controls from conditional forecasts using realized contemporaneous controls.
+- Found that the price-history AR(3) achieved the best overall forecasting performance.
+- Reduced RMSE from 0.3008 to 0.2380, a 20.87% improvement relative to the previous-month naive benchmark.
+- Reduced MAE from 0.2411 to 0.1969, an improvement of approximately 18.33%.
+- Outperformed the previous-month naive benchmark in 15 of the 24 evaluation months.
+- Confirmed through leave-one-month-out checks that the improvement was not driven by a single evaluation month.
+- Compared forecast accuracy using Harvey–Leybourne–Newbold-corrected Diebold–Mariano tests, a Clark–West test, and an exact sign test.
+- Found strong evidence of incremental predictive information in the Clark–West test, while the remaining tests provided weaker or mixed evidence.
+- Interpreted the forecasting evidence as promising rather than definitive because of the short evaluation period and model-selection process.
+
 ## Data sources
 
 ### U.S. Energy Information Administration
@@ -184,11 +201,13 @@ texas-energy-economy-monitor/
 │   ├── 03_descriptive_visualizations.ipynb
 │   ├── 04_seasonality_and_trends.ipynb
 │   ├── 05_energy_economy_overview.ipynb
-│   └── 06_baseline_time_series_models.ipynb
+│   ├── 06_baseline_time_series_models.ipynb
+│   └── 07_out_of_sample_forecasting.ipynb
 ├── reports/
 │   ├── figures/
 │   │   ├── baseline_model_4_residual_diagnostics.png
-│   │   └── preferred_ar3_residual_acf_pacf.png
+│   │   ├── preferred_ar3_residual_acf_pacf.png
+│   │   └── out_of_sample_forecast_performance.png
 │   └── tables/
 │       ├── energy_indicator_coverage.csv
 │       ├── energy_indicator_summary.csv
@@ -207,7 +226,14 @@ texas-energy-economy-monitor/
 │       ├── robustness_henry_hub_effects.csv
 │       ├── ar_order_candidate_comparison.csv
 │       ├── preferred_ar3_model_results.csv
-│       └── preferred_ar3_residual_correlations.csv
+│       ├── preferred_ar3_residual_correlations.csv
+│       ├── out_of_sample_forecasts.csv
+│       ├── out_of_sample_forecast_metrics.csv
+│       ├── forecast_monthly_win_summary.csv
+│       ├── preferred_forecast_monthly_details.csv
+│       ├── forecast_leave_one_month_out_results.csv
+│       ├── forecast_leave_one_month_out_summary.csv
+│       └── forecast_statistical_tests.csv
 ├── src/
 │   ├── build_descriptive_summary.py
 │   ├── build_energy_indicators.py
@@ -363,6 +389,14 @@ After building the final analysis sample, open and run:
 notebooks/06_baseline_time_series_models.ipynb
 ```
 
+### Run the pseudo-out-of-sample forecasting analysis
+
+After running the baseline monthly time-series analysis, open and run:
+
+```text
+notebooks/07_out_of_sample_forecasting.ipynb
+```
+
 ## Generated outputs
 
 Generated data files are stored under:
@@ -408,6 +442,19 @@ reports/figures/baseline_model_4_residual_diagnostics.png
 reports/figures/preferred_ar3_residual_acf_pacf.png
 ```
 
+Important forecasting outputs include:
+
+```text
+reports/tables/out_of_sample_forecasts.csv
+reports/tables/out_of_sample_forecast_metrics.csv
+reports/tables/forecast_monthly_win_summary.csv
+reports/tables/preferred_forecast_monthly_details.csv
+reports/tables/forecast_leave_one_month_out_results.csv
+reports/tables/forecast_leave_one_month_out_summary.csv
+reports/tables/forecast_statistical_tests.csv
+reports/figures/out_of_sample_forecast_performance.png
+```
+
 ## Data-validation principles
 
 - Raw API responses are not manually overwritten.
@@ -425,6 +472,10 @@ reports/figures/preferred_ar3_residual_acf_pacf.png
 - FRED frequency, units, seasonal adjustment, and coverage are preserved in metadata reports.
 - Competing dynamic models are compared on common estimation samples.
 - Preferred-model residual autocorrelation is assessed using Durbin–Watson, Ljung–Box, Breusch–Godfrey, ACF, and PACF diagnostics.
+- Forecasting models are evaluated over the same continuous test interval.
+- Expanding estimation windows exclude observations from the forecast month and all future months.
+- Competing forecasts are compared using identical evaluation observations.
+- Leave-one-month-out checks are used to assess whether forecast improvements depend on a single evaluation month.
 
 ## Current limitations
 
@@ -435,13 +486,17 @@ reports/figures/preferred_ar3_residual_acf_pacf.png
 - Statewide monthly averages conceal variation across utilities, retail plans, customer groups, and regions.
 - The dynamic specification approximates potentially heterogeneous and nonlinear retail-price adjustment.
 - The implied long-run multiplier is sensitive to uncertainty in the estimated autoregressive persistence.
+- The pseudo-out-of-sample evaluation contains only 24 monthly forecasts.
+- The preferred forecasting model was selected after comparing several candidate specifications.
+- The forecasting design does not incorporate publication delays, historical data vintages, or subsequent data revisions.
 - Quarterly state GDP and detailed industry-level labor-market data have not yet been added.
 
 ## Next milestone
 
-The preferred AR(3) specification now provides a reproducible benchmark for future empirical extensions. Potential next steps include:
+The project now contains a reproducible data pipeline, a baseline explanatory time-series model, and an expanding-window forecasting evaluation. Potential next steps include:
 
-- evaluating out-of-sample forecasting performance;
+- extending the forecasting evaluation as additional monthly observations become available;
+- evaluating forecast combinations and additional parsimonious benchmarks;
 - adding wholesale electricity-price measures;
 - examining nonlinear or asymmetric natural-gas price transmission;
 - studying variation across utilities, retail plans, or Texas regions where suitable data are available;

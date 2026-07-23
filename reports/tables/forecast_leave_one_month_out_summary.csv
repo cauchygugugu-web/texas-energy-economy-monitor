@@ -1,0 +1,5 @@
+model,model_label,minimum_rmse_improvement_pct,maximum_rmse_improvement_pct,minimum_mae_improvement_pct,maximum_mae_improvement_pct
+ar3_conditional_controls,AR(3): conditional controls,-5.246701681314451,8.810809340962864,-7.6609957634837205,6.262956949931798
+ar3_lagged_controls,AR(3): lagged controls,2.5235998053662865,11.33839989916115,-0.9046781374980107,11.24787858385461
+ar3_price_history,AR(3): price history,18.134541138272567,26.096021808058392,14.666710692358045,23.942161372998175
+seasonal_naive,Seasonal naive,-38.25368849570779,-8.472365143924314,-42.04297660586279,-14.32664241321671
