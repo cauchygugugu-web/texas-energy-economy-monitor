@@ -1,7 +1,7 @@
 ,count,mean,std,min,median,max
-residential_price_real_2025_01,135.0,14.834,0.578,13.624,14.69,16.338
-henry_hub_natural_gas_price,135.0,3.168,1.385,1.49,2.83,8.81
-natural_gas_share_pp,135.0,49.541,5.348,36.81,50.121,60.617
-renewable_share_pp,135.0,22.47,8.512,7.379,22.043,45.454
-tx_heating_degree_days,135.0,139.667,175.85,0.0,46.0,609.0
-tx_cooling_degree_days,135.0,251.815,228.969,5.0,157.0,747.0
+residential_price_real_2025_01,136.0,14.841,0.58,13.624,14.692,16.338
+henry_hub_natural_gas_price,136.0,3.167,1.38,1.49,2.83,8.81
+natural_gas_share_pp,136.0,49.53,5.33,36.81,50.117,60.617
+renewable_share_pp,136.0,22.578,8.573,7.379,22.072,45.454
+tx_heating_degree_days,136.0,138.669,175.583,0.0,45.0,609.0
+tx_cooling_degree_days,136.0,252.096,228.143,5.0,157.5,747.0
