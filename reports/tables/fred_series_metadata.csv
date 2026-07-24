@@ -9,5 +9,5 @@ For more information on the CPI, see the Handbook of Methods (https://www.bls.go
 MCOILWTICO,"Crude Oil Prices: West Texas Intermediate (WTI) - Cushing, Oklahoma",Monthly,M,Dollars per Barrel,$ per Barrel,Not Seasonally Adjusted,NSA,1986-01-01,2026-06-01,2026-07-08 12:18:24-05,"Definitions, Sources and Explanatory Notes:
 http://www.eia.doe.gov/dnav/pet/TblDefs/pet_pri_spt_tbldef2.asp",wti_crude_oil_price,energy_price
 MHHNGSP,Henry Hub Natural Gas Spot Price,Monthly,M,Dollars per Million BTU,$ Per Mil. BTU,Not Seasonally Adjusted,NSA,1997-01-01,2026-06-01,2026-07-08 12:32:16-05,More information about this series can be found at http://www.eia.gov/dnav/ng/TblDefs/ng_pri_fut_tbldef2.asp,henry_hub_natural_gas_price,energy_price
-TXNA,All Employees: Total Nonfarm in Texas,Monthly,M,Thousands of Persons,Thous. of Persons,Seasonally Adjusted,SA,1990-01-01,2026-05-01,2026-06-24 09:42:44-05,,tx_total_nonfarm_employment,labor_market
-TXUR,Unemployment Rate in Texas,Monthly,M,Percent,%,Seasonally Adjusted,SA,1976-01-01,2026-05-01,2026-06-24 17:55:22-05,,tx_unemployment_rate,labor_market
+TXNA,All Employees: Total Nonfarm in Texas,Monthly,M,Thousands of Persons,Thous. of Persons,Seasonally Adjusted,SA,1990-01-01,2026-06-01,2026-07-22 09:27:01-05,,tx_total_nonfarm_employment,labor_market
+TXUR,Unemployment Rate in Texas,Monthly,M,Percent,%,Seasonally Adjusted,SA,1976-01-01,2026-06-01,2026-07-22 15:58:26-05,,tx_unemployment_rate,labor_market

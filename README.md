@@ -258,7 +258,8 @@ texas-energy-economy-monitor/
 │   ├── inspect_weather_api.py
 │   ├── fetch_weather.py
 │   ├── build_weather_dataset.py
-│   └── build_analysis_sample.py
+│   ├── build_analysis_sample.py
+│   └── run_pipeline.py
 ├── .env.example
 ├── .gitignore
 ├── README.md
@@ -300,86 +301,20 @@ Do not commit the `.env` file.
 
 ## Running the project
 
-### Build the retail-electricity dataset
+### Run the complete data pipeline
+
+From the project root, run:
 
 ```bash
-python src/build_retail_dataset.py
+python src/run_pipeline.py
 ```
 
-### Build and validate the clean generation dataset
+The pipeline downloads the latest available EIA, FRED, and NOAA data,
+rebuilds the processed datasets, runs validation checks, and creates the
+final monthly analysis sample.
 
-```bash
-python src/build_generation_dataset.py
-```
-
-### Build the integrated monthly energy dataset
-
-```bash
-python src/build_integrated_energy_dataset.py
-```
-
-### Build analysis-ready energy indicators
-
-```bash
-python src/build_energy_indicators.py
-```
-
-### Build the variable dictionary
-
-```bash
-python src/build_variable_dictionary.py
-```
-
-### Generate descriptive statistics
-
-```bash
-python src/build_descriptive_summary.py
-```
-
-### Build time-series features
-
-```bash
-python src/build_time_series_features.py
-```
-
-### Create the FRED series configuration
-
-```bash
-python src/create_fred_series_config.py
-```
-
-### Test the FRED API connection
-
-```bash
-python src/fetch_fred.py
-```
-
-### Build the FRED macroeconomic dataset
-
-```bash
-python src/build_fred_dataset.py
-```
-
-### Build the integrated energy-and-economy dataset
-
-```bash
-python src/build_energy_economy_dataset.py
-```
-
-### Create the weather-series configuration
-```bash
-python src/create_weather_series_config.py
-```
-
-### Build the Texas weather dataset
-```bash
-python src/build_weather_dataset.py
-```
-
-### Build the final analysis sample
-```bash
-python src/build_analysis_sample.py
-```
+Individual scripts under `src/` may also be run separately for debugging
+or rebuilding a specific dataset.
 
 ### Run the baseline monthly time-series analysis
 
