@@ -144,9 +144,9 @@ PET = FOS - COW - NG - OOG
 - Evaluated residual autocorrelation, multicollinearity, influential observations, and sensitivity to February 2021.
 - Compared AR(1) through AR(4) dynamic specifications on common estimation samples.
 - Selected a stable AR(3) model using information criteria, residual diagnostics, and model parsimony.
-- Obtained a Durbin–Watson statistic of 1.9615 and nonsignificant Breusch–Godfrey tests at maximum lags 1, 6, and 12 for the preferred model.
-- Estimated a contemporaneous Henry Hub coefficient of approximately 0.0734 cents per kWh for a $1/MMBtu increase, with a HAC p-value of approximately 0.0006.
-- Estimated an autoregressive-coefficient sum of approximately 0.8893 and an implied long-run multiplier of approximately 0.66 cents per kWh.
+- Obtained a Durbin–Watson statistic of 1.9857 and nonsignificant Breusch–Godfrey tests at maximum lags 1, 6, and 12 for the preferred model.
+- Estimated a contemporaneous Henry Hub coefficient of approximately 0.0740 cents per kWh for a $1/MMBtu increase, with a HAC p-value of approximately 0.0004.
+- Estimated an autoregressive-coefficient sum of approximately 0.8877 and an implied long-run multiplier of approximately 0.66 cents per kWh.
 - Interpreted all model estimates as conditional associations rather than causal effects.
 
 ### Pseudo-out-of-sample forecasting
