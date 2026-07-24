@@ -510,4 +510,6 @@ At the current stage, the priority remains data reliability, transparent variabl
 
 ## License
 
-A license has not yet been selected.
+The project code is licensed under the [MIT License](LICENSE).
+
+Data retrieved from EIA, FRED, and NOAA remains subject to the respective data providers' terms and policies.
